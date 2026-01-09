@@ -254,6 +254,8 @@ def fillHistoByDef(tree,hDef,extraCuts):
         if hDef.vetoMType(mType):
             continue
         is1D = hDef.getParameter('yNbins',mType)==None
+        is2D = hDef.getParameter('yNbins',mType)!=None and hDef.getParameter('zNbins',mType)==None
+        is3D = hDef.getParameter('yNbins',mType)!=None and hDef.getParameter('zNbins',mType)!=None
         isProfile = hDef.getParameter('profile',mType)!=None and hDef.getParameter('profile',mType)
         effCuts = hDef.getParameter('effCuts',mType)
         variable = hDef.getParameter('variable',mType)
@@ -278,6 +280,7 @@ def fillHistoByDef(tree,hDef,extraCuts):
                 tree.Project(hName+"_2",variable, \
                             cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
                 histos[mType][3] = ROOT.TEfficiency(histos[mType][1],histos[mType][0])
+                histos[mType][3].SetMarkerStyle(20)
             else:
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][0]
@@ -290,7 +293,7 @@ def fillHistoByDef(tree,hDef,extraCuts):
                           cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
             # always keep final histogram in 4th position
             histos[mType][3] = histos[mType][0]
-        else:
+        elif is2D:
             nby = hDef.getParameter('yNbins',mType)
             ymin = hDef.getParameter('yMin',mType)
             ymax = hDef.getParameter('yMax',mType)
@@ -310,13 +313,27 @@ def fillHistoByDef(tree,hDef,extraCuts):
             else:
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][0]
+        elif is3D:
+            nby = hDef.getParameter('yNbins',mType)
+            ymin = hDef.getParameter('yMin',mType)
+            ymax = hDef.getParameter('yMax',mType)
+            nbz = hDef.getParameter('zNbins',mType)
+            zmin = hDef.getParameter('zMin',mType)
+            zmax = hDef.getParameter('zMax',mType)
+            histos[mType] = [ ROOT.TH3F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax), \
+                                  None, None, None ]
+            tree.Project(hName+"_1",variable, \
+                          cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
+            assert effCuts==None
+            # always keep final histogram in 4th position
+            histos[mType][3] = histos[mType][0]
         #print("Ending for ",hDef.name,hName,hTitle)
                 
     savedDir.cd()
     return histos
 
 
-def drawHistoByDef(histos,hDef,logY=False,same=False):
+def drawHistoByDef(histos,hDef,logY=False,logZ=False,same=False):
     result = { 'cnv' : None, 'histos' : histos, 'pave' : None }
 
     savedDir = ROOT.gDirectory
@@ -344,6 +361,8 @@ def drawHistoByDef(histos,hDef,logY=False,same=False):
         if hDef.vetoMType(mType):
             continue
         is1D = hDef.getParameter('yNbins',mType)==None
+        is2D = hDef.getParameter('yNbins',mType)!=None and hDef.getParameter('zNbins',mType)==None
+        is3D = hDef.getParameter('yNbins',mType)!=None and hDef.getParameter('zNbins',mType)!=None
         isProfile = hDef.getParameter('profile',mType)!=None and hDef.getParameter('profile',mType)
         effCuts = hDef.getParameter('effCuts',mType)
         variable = hDef.getParameter('variable',mType)
@@ -362,6 +381,7 @@ def drawHistoByDef(histos,hDef,logY=False,same=False):
         xmax = hDef.getParameter('xMax',mType)
 
         ytitle = hDef.getParameter('yTitle',mType) if hDef.getParameter('yTitle',mType) else ""
+        ztitle = hDef.getParameter('zTitle',mType) if hDef.getParameter('zTitle',mType) else ""
         if is1D and ( not isProfile ):
             ymin = hDef.getParameter('yMin',mType) if hDef.getParameter('yMin',mType)!=None else 0.
             ymax = hDef.getParameter('yMax',mType) if hDef.getParameter('yMax',mType)!=None else 1.05
@@ -372,13 +392,16 @@ def drawHistoByDef(histos,hDef,logY=False,same=False):
                 histos[mType][2].GetXaxis().SetTitle(xtitle)
                 histos[mType][2].GetYaxis().SetTitle(ytitle)
                 histos[mType][3] = ROOT.TEfficiency(histos[mType][1],histos[mType][0])
-                histos[mType][3].SetMarkerSize(0.3)
+                histos[mType][3].SetMarkerStyle(20)
                 histos[mType][3].Draw("same Z")
             else:
                 histos[mType][0].SetTitle(hTitle)
                 histos[mType][0].GetXaxis().SetTitle(xtitle)
                 histos[mType][0].GetYaxis().SetTitle(ytitle)
                 histos[mType][0].Draw("same" if same else "")
+            fitFunc = hDef.getParameter('fit')
+            if fitFunc!=None:
+                histos[mType][0].Fit(fitFunc,"Q","same")
         elif isProfile:
             histos[mType][0].SetTitle(hTitle)
             histos[mType][0].GetXaxis().SetTitle(xtitle)
@@ -387,7 +410,7 @@ def drawHistoByDef(histos,hDef,logY=False,same=False):
             #histos[mType][0].SetFillColor(ROOT.TColor.GetColorBright(ROOT.kGray))
             #histos[mType][0].SetFillColor(ROOT.kGray)
             histos[mType][0].Draw("same" if same else "")
-        else:
+        elif is2D:
             assert not same
             zmin = hDef.getParameter('zMin',mType) if hDef.getParameter('zMin',mType)!=None else 0.
             zmax = hDef.getParameter('zMax',mType) if hDef.getParameter('zMax',mType)!=None else 1.05
@@ -403,8 +426,20 @@ def drawHistoByDef(histos,hDef,logY=False,same=False):
                 histos[mType][0].GetXaxis().SetTitle(xtitle)
                 histos[mType][0].GetYaxis().SetTitle(ytitle)
                 histos[mType][0].Draw("ZCOL")
+        elif is3D:
+            assert not same
+            zmin = hDef.getParameter('zMin',mType) if hDef.getParameter('zMin',mType)!=None else 0.
+            zmax = hDef.getParameter('zMax',mType) if hDef.getParameter('zMax',mType)!=None else 1.05
+            assert effCuts==None
+            histos[mType][0].SetTitle(hTitle)
+            histos[mType][0].GetXaxis().SetTitle(xtitle)
+            histos[mType][0].GetYaxis().SetTitle(ytitle)
+            histos[mType][0].GetZaxis().SetTitle(ztitle)
+            histos[mType][0].Draw()
         if logY or hDef.getParameter('logY',mType):
             ROOT.gPad.SetLogy(1)
+        if is2D and ( logZ or hDef.getParameter('logZ',mType) ):
+            ROOT.gPad.SetLogz(1)
         ROOT.gPad.Update()
         
         #cnv.cd()
@@ -484,10 +519,13 @@ parser.add_argument('--selectedHistograms', help='comma-separated names of histo
                         type=str, default='*')
 parser.add_argument('--vetoedHistograms', help='comma-separated names of histogram definitions not to be used',
                         type=str, default='')
-parser.add_argument('--logY', help='use log scale', action='store_true', default=False)
+parser.add_argument('--logY', help='use log scale for y axis', action='store_true', default=False)
+parser.add_argument('--logZ', help='use log scale for z axis', action='store_true', default=False)
 parser.add_argument('--printTree', '-p', help='print TTree contents', action='store_true', default=False)
 parser.add_argument('--listHistograms', '-l', help='list predefined and selected histograms', \
                         action='store_true', default=False)
+parser.add_argument('--zone', '-z', help='restrict to zone in OT (barrel, tilted, endcap)', type=str, \
+                        choices=['barrel','tilted','endcap'], default=None)
 parser.add_argument('file', help='input file', type=str, nargs='+', default=None)
 args = parser.parse_args()
 outputFormats = [ ]
@@ -498,6 +536,19 @@ if args.output!=None:
 fitResiduals = args.fitResiduals.split(",") if args.fitResiduals else [ ]
 selectedHistoNames = args.selectedHistograms.split(",")
 vetoedHistoNames = args.vetoedHistograms.split(",")
+#
+# add cut for zone definition?
+#
+if args.zone=="barrel":
+    zoneCuts = "detNormal.Rho()>0.99"
+elif args.zone=="endcap":
+    zoneCuts = "detNormal.Rho()<0.01"
+elif args.zone=="tilted":
+    zoneCuts = "detNormal.Rho()>0.05&&detNormal.Rho()<0.095"
+else:
+    zoneCuts = ""
+args.cuts = cutString(args.cuts,zoneCuts)
+    
 #
 # load histogram definitions
 #
@@ -591,7 +642,8 @@ for cName in allHDefs.canvasNames():
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
         cHistos[hName] = fillHistoByDef(simHitTree,allHDefs.byCanvas[cName][hName],extraCuts)
-        allObjects.append(drawHistoByDef(cHistos[hName],allHDefs.byCanvas[cName][hName],logY=args.logY,same=same))
+        allObjects.append(drawHistoByDef(cHistos[hName],allHDefs.byCanvas[cName][hName], \
+                                             logY=args.logY,logZ=args.logZ,same=same))
         same = True
     if args.output!=None:
         c = allObjects[-1]['cnv']
@@ -599,6 +651,8 @@ for cName in allHDefs.canvasNames():
         basename = os.path.join(args.output,c.GetName())
         if args.sampleName!=None:
             basename += "_" + args.sampleName
+        if args.zone!=None:
+            basename += "_" + args.zone
         print(basename)
         for fmt in outputFormats:
             c.SaveAs(basename+"."+fmt)

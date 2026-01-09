@@ -421,3 +421,244 @@ widthVsPath:
    yNbins: 25
    yMin: 0.0
    yMax: 25
+
+res3DXVsDxDzModX:
+   histogramTitle: 'residuals 3D (x)'
+   baseCuts: 'tof<12.5&&hasRecHit>0'
+   xTitle: '#Delta x [#mum]'
+   xNbins: 100
+   xMin: -500
+   xMax: 500
+   zTitle: 'local dx/dz'
+   zNbins: 21
+   zMin: -1.05
+   zMax: 1.05
+   mType23:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 20
+      yMin: 0
+      yMax: 100
+   mType24:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 20
+      yMin: 0
+      yMax: 100
+   mType25:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),90):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 90 #mum [#mum]'
+      yNbins: 18
+      yMin: 0
+      yMax: 90
+
+res3DXVsDxDz:
+   histogramTitle: 'residuals 3D (x)'
+   baseCuts: 'tof<12.5&&hasRecHit>0'
+   xTitle: '#Delta x [#mum]'
+   xNbins: 100
+   xMin: -200
+   xMax: 200
+   zTitle: 'local dx/dz'
+   zNbins: 21
+   zMin: -1.05
+   zMax: 1.05
+   mType23:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType24:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType25:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),90):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 90 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 90
+
+res3DXVsDxDzW1:
+   histogramTitle: 'residuals 3D (x)'
+   baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+   xTitle: '#Delta x [#mum]'
+   xNbins: 100
+   xMin: -200
+   xMax: 200
+   zTitle: 'local dx/dz'
+   zNbins: 21
+   zMin: -1.05
+   zMax: 1.05
+   mType23:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType24:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType25:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),90):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 90 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 90
+
+res3DXVsDxDzW2:
+   histogramTitle: 'residuals 3D (x)'
+   baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+   xTitle: '#Delta x [#mum]'
+   xNbins: 100
+   xMin: -200
+   xMax: 200
+   zTitle: 'local dx/dz'
+   zNbins: 21
+   zMin: -1.05
+   zMax: 1.05
+   mType23:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType24:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType25:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),90):10000*(localPos.x()-rhLocalPos.x())'
+      yTitle: 'x modulo 90 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 90
+
+pull3DXVsDxDz:
+   histogramTitle: 'pulls 3D (x)'
+   baseCuts: 'tof<12.5&&hasRecHit>0'
+   xTitle: '#Delta x [#mum]'
+   xNbins: 100
+   xMin: -10
+   xMax: 10
+   zTitle: 'local dx/dz'
+   zNbins: 21
+   zMin: -1.05
+   zMax: 1.05
+   mType23:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType24:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType25:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),90):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 90 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 90
+
+pull3DXVsDxDzW1:
+   histogramTitle: 'pulls 3D (x)'
+   baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+   xTitle: '#Delta x [#mum]'
+   xNbins: 100
+   xMin: -10
+   xMax: 10
+   zTitle: 'local dx/dz'
+   zNbins: 21
+   zMin: -1.05
+   zMax: 1.05
+   mType23:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType24:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType25:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),90):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 90 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 90
+
+pull3DXVsDxDzW2:
+   histogramTitle: 'pulls 3D (x)'
+   baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+   xTitle: '#Delta x [#mum]'
+   xNbins: 100
+   xMin: -10
+   xMax: 10
+   zTitle: 'local dx/dz'
+   zNbins: 21
+   zMin: -1.05
+   zMax: 1.05
+   mType23:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType24:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),100):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 100 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 100
+   mType25:
+      variable: 'path.x()/path.z():floatMod(10000*localPos.x(),90):(localPos.x()-rhLocalPos.x())/rhLocalErr.x()'
+      yTitle: 'x modulo 90 #mum [#mum]'
+      yNbins: 1
+      yMin: 0
+      yMax: 90
+
+effDxDz:
+   variable: 'path.x()/path.z()'
+   histogramTitle: 'efficiency (dx/dz)'
+   baseCuts: 'tof<12.5'
+   effCuts: 'hasRecHit>0'
+   xTitle: 'local dx/dz'
+   xNbins: 21
+   xMin: -1.05
+   xMax: 1.05
+
+effDxDzW1:
+   variable: 'path.x()/path.z()'
+   histogramTitle: 'efficiency, 1-strip clusters (dx/dz)'
+   baseCuts: 'tof<12.5'
+   effCuts: 'hasRecHit>0&&clusterSize==1'
+   xTitle: 'local dx/dz'
+   xNbins: 21
+   xMin: -1.05
+   xMax: 1.05
+
+effDxDzW2:
+   variable: 'path.x()/path.z()'
+   histogramTitle: 'efficiency, 2-strip clusters (dx/dz)'
+   baseCuts: 'tof<12.5'
+   effCuts: 'hasRecHit>0&&clusterSize==2'
+   xTitle: 'local dx/dz'
+   xNbins: 21
+   xMin: -1.05
+   xMax: 1.05
+
