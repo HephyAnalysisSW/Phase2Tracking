@@ -1,0 +1,86 @@
+### GLOBAL DEFINITIONS
+# This part defines some global variables, which you can use later
+# Note that yaml does not support defining variables 
+# so it is handled as python strings and applied by
+# `str.format()` method
+# usage: variable_name: content
+# The user can define any `variable_name` and `content`, 
+# but make sure the `variable_name` is not used below
+#hits_size1: Hit_cluster_size 
+
+### PRE-SELECTIONS
+# This part defines the event preselection
+# This selection is applied before any plotting
+# usage: presel: content
+# The user can define `content` but cannot change the name `presel`
+presel:
+
+### NEW VARIABLE DEFINITION
+# This part defines new variables
+# It calls the `Define` method of an RDataFrame
+# usage1: new_variable_name: definition
+# usage2: new_variable_name: [definition(format string),global defined variables]
+# if a global defined variable is used
+new_variables:
+   pathX: 'path.fCoordinates.fX'
+   pathZ: 'path.fCoordinates.fZ'
+   dxdz: 'pathX/pathZ'
+   alpha: 'atan2(abs(pathX),abs(pathZ))/3.1415*180'
+   localPosX: 'localPos.fCoordinates.fX'
+   rhLocalPosX: 'rhLocalPos.fCoordinates.fX'
+   #pathX: 'ROOT::VecOps::Map(path, [](ROOT::Math::XYZVectorF x){return 3.;})'
+   #dxdz: 'path.fCoordinates.fX/path.fCoordinates.fZ'
+   
+
+### EVENT SELECTION
+# This part defines search regions
+# It calls the `Filter` method of an RDataFrame
+# usage: name: selections
+regions:
+  All:
+
+### EVENT VARIABLES
+# event_variables:
+#   This part defines event variables that will be made into histograms
+#   All variables should be defined or exists already in the Ntuple
+# event_2d_plots:
+#   This part defines 2D histograms that will be made
+#   usage: [x,y]
+event_variables:
+
+event_2d_plots:
+
+### OBJECTS
+# This part lists all objects that will be plotted
+# The structure is:
+# Object_name: the user can define the object name
+#   selection: similar with event level selections, any object level selection can be used here but make sure that the variables used in selection and variables below have the same dimension
+#   variables: variables to make 1D histograms
+#   2d_plots: variables to make 2D histograms
+#   nm1: N-1 plots. For this part one could give it several variables with the cut values, the script will do the n-1 plots for all given variables
+objects:
+  effAlpha:
+    selections:
+        alpha_base: tof<12.5 && pabs>0.3
+        alpha_loose: hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.1
+        alpha_tight: hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.0075
+    variables:
+        - alpha
+    2d_plots:
+  effRecHits:
+    selections:
+      dxdz_all: tof<12.5
+      dxdz_recHit: tof<12.5 & hasRecHit>0
+    variables:
+      - dxdz
+    2d_plots:
+
+
+### PLOT SETTING
+# This section defines the name, titles, binning of histograms
+# usage: variable_name: [name,title,number of bins,range mininum,range maximum]
+plot_setting:
+   dxdz: [dxdz,'dx/dz (all):local dx/dz:entries / bin',21,-1.05,1.05]
+   alpha: [alpha,'Efficiency vs. alpha(xz): alpha(xz) [deg]:entries / bin',100,0.,100.]
+   #dxdz_all: [dxdz_all,'dx/dz (all):local dx/dz:entries / bin',21,-1.05,1.05]
+   #dxdz_rechit: [dxdz_recHit,'dx/dz (with RecHit):local dx/dz:entries / bin',21,-1.05,1.05]
