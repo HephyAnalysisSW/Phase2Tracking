@@ -2,7 +2,7 @@ import os,sys
 import math
 import uuid
 import shutil
-import Phase2Tracking.Plotter.plotter as p
+import Phase2Tracking.Plotter.python.plotter as p
 
 import argparse
 
@@ -45,6 +45,8 @@ parser.add_argument('--njobs', type=int, default=1,
                         help='The number of jobs to submit for each sample. Could be a list of a single value.')
 parser.add_argument('--nfiles', type=int, default=-1,
                         help='The number of files per job to submit for each sample. Could be a list of a single value.')
+parser.add_argument('--loadMacro', type=str, nargs='*', default=[ ], \
+                        help='File name for C++ macro(s) to be loaded (can be repeated)')
 args = parser.parse_args()
 
 
@@ -137,6 +139,6 @@ if __name__=="__main__":
   else:
     if not os.path.exists(args.filelist):
         raise Exception("file list not given for plotting")
-    plotter = p.Plotter(name=args.name,treeName=str(args.treeName),outputDir=args.output,input_filelist=args.filelist,config=args.config,isData=args.data,postfix=args.postfix)
+    plotter = p.Plotter(name=args.name,treeName=str(args.treeName),outputDir=args.output,input_filelist=args.filelist,config=args.config,isData=args.data,postfix=args.postfix,macros=args.loadMacro)
     plotter.makeHistFiles()
 

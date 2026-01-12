@@ -28,6 +28,8 @@ new_variables:
    alpha: 'atan2(abs(pathX),abs(pathZ))/3.1415*180'
    localPosX: 'localPos.fCoordinates.fX'
    rhLocalPosX: 'rhLocalPos.fCoordinates.fX'
+   localPosXMod90: 'floatMod(10000*localPos.fCoordinates.fX,90)'
+   localPosXMod100: 'floatMod(10000*localPos.fCoordinates.fX,100)'
    #pathX: 'ROOT::VecOps::Map(path, [](ROOT::Math::XYZVectorF x){return 3.;})'
    #dxdz: 'path.fCoordinates.fX/path.fCoordinates.fZ'
    
@@ -62,11 +64,46 @@ objects:
   effAlpha:
     selections:
         alpha_base: tof<12.5 && pabs>0.3
-        alpha_loose: hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.1
-        alpha_tight: hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.0075
+        alpha_loose: tof<12.5 && pabs>0.3 & hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.1
+        alpha_tight: tof<12.5 && pabs>0.3 & hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.0075
     variables:
         - alpha
     2d_plots:
+  effVsModXM23:
+    selections:
+      modXM23_base: tof<12.5 && pabs>0.3 && moduleType==23
+      modXM23_tight: tof<12.5 && pabs>0.3 && hasRecHit>0 && abs(localPosX-rhLocalPosX)<0.0075 && moduleType==23
+    variables:
+      - localPosXMod100
+    2d_plots:
+  effVsModXM24:
+    selections:
+      modXM24_base: tof<12.5 && pabs>0.3 && moduleType==24
+      modXM24_tight: tof<12.5 && pabs>0.3 && hasRecHit>0 && abs(localPosX-rhLocalPosX)<0.0075 && moduleType==24
+    variables:
+      - localPosXMod100
+    2d_plots:
+  effVsModXM25:
+    selections:
+      modXM25_base: tof<12.5 && pabs>0.3 && moduleType==25
+      modXM25_tight: tof<12.5 && pabs>0.3 && hasRecHit>0 && abs(localPosX-rhLocalPosX)<0.0075 && moduleType==25
+    variables:
+      - localPosXMod90
+    2d_plots:
+#  effVsModXM24:
+#     selections:
+#        modXM24_base: tof<12.5 && pabs>0.3
+#        modXM24_tight: tof<12.5 && pabs>0.3 & hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.0075 & moduleType=24
+#   variables:
+#      - localPosXMod100
+#    2d_plots:
+#  effVsModXM25:
+#     selections:
+#        modXM25_base: tof<12.5 && pabs>0.3
+#        modXM25_tight: tof<12.5 && pabs>0.3 & hasRecHit>0 & abs(localPosX-rhLocalPosX)<0.0075 & moduleType=25
+#   variables:
+#      - localPosXMod90
+#    2d_plots:
   effRecHits:
     selections:
       dxdz_all: tof<12.5
@@ -82,5 +119,5 @@ objects:
 plot_setting:
    dxdz: [dxdz,'dx/dz (all):local dx/dz:entries / bin',21,-1.05,1.05]
    alpha: [alpha,'Efficiency vs. alpha(xz): alpha(xz) [deg]:entries / bin',100,0.,100.]
-   #dxdz_all: [dxdz_all,'dx/dz (all):local dx/dz:entries / bin',21,-1.05,1.05]
-   #dxdz_rechit: [dxdz_recHit,'dx/dz (with RecHit):local dx/dz:entries / bin',21,-1.05,1.05]
+   localPosXMod100: [localPosXMod100,'Efficiency vs. x % 100 #mu m: x modulo 100 #mu m [#mu m]:entries/bin',220,-5,105]
+   localPosXMod90: [localPosXMod90,'Efficiency vs. x % 90 #mu m: x modulo 90 #mu m [#mu m]:entries/bin',220,-5,95]

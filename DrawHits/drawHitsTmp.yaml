@@ -1,7 +1,7 @@
 #
 #
 #
-effAlphaLoose:
+effAlphaTight:
    baseCuts: 'tof<12.5&&pabs>0.3'
    effCuts: 'hasRecHit>0&&abs(localPos.x()-rhLocalPos.x())<0.0075'
    histogramTitle: 'Efficiency vs. alpha(xz) tight'
@@ -16,7 +16,7 @@ effAlphaLoose:
 #
 #
 #
-effAlphaTight:
+effAlphaLoose:
    baseCuts: 'tof<12.5&&pabs>0.3'
    effCuts: 'hasRecHit>0&&abs(localPos.x()-rhLocalPos.x())<0.1'
    histogramTitle: 'Efficiency vs. alpha(xz) loose'

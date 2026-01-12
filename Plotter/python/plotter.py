@@ -11,7 +11,8 @@ ROOT.TH1.SetDefaultSumw2(True)
 ROOT.gStyle.SetOptStat(0)
 
 class Plotter:
-  def __init__(self,name,treeName,outputDir="./",input_filelist=None,config="",isData=False,postfix=""):
+  def __init__(self,name,treeName,outputDir="./",input_filelist=None,config="",isData=False,postfix="", \
+                 macros=[]):
     self.name = name 
     self.treeName = treeName
     self.outputDir = outputDir
@@ -21,6 +22,8 @@ class Plotter:
     with open(config, "r") as f_cfg:
       cfg = yaml.load(f_cfg, Loader=yaml.FullLoader)
     self.cfg = cfg
+    for m in macros:
+      ROOT.gROOT.ProcessLine(".L "+m+"+")
 
   def getFileList(self):
     self.filelist = []

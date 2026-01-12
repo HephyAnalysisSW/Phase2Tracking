@@ -1,1 +1,1 @@
-root://eos.grid.vbc.ac.at//eos/vbc/experiments/cms/store/user/lian/RelValSingleMuPt10/SingleMuPt10_noPU_2_lian/250916_143902/0000/rechits_tree_1.root
+../HitAnalyzer/test/rechits_tree_tt_3.root
