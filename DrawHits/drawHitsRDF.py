@@ -286,9 +286,14 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             ymin = hDef.getParameter('yMin',mType)
             ymax = hDef.getParameter('yMax',mType)
             v2,v1 = variable.split(":")
-            histos[mType] = [ rdf.Profile1D((hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax,'S'), \
-                                            v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2), \
-                                            None, None, None ]
+            cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
+            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+            model = (hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax)
+            histos[mType] = [ rdf.Profile1D(model,varMask1,varMask2), None, None, None ]
+            #histos[mType] = [ rdf.Profile1D((hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax,'S'), \
+            #                                v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2), \
+            #                                None, None, None ]
         elif is2D:
             nby = hDef.getParameter('yNbins',mType)
             ymin = hDef.getParameter('yMin',mType)
@@ -385,12 +390,12 @@ def fillHistoByDef(tree,hDef,extraCuts,histos):
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][0]
         elif isProfile:
-            ymin = hDef.getParameter('yMin',mType)
-            ymax = hDef.getParameter('yMax',mType)
-            #histos[mType] = [ ROOT.TProfile(hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax,'S'), None, None, None ]
-            histos[mType] = [ ROOT.TProfile(hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax), None, None, None ]
-            tree.Project(hName+"_1",variable, \
-                          cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
+            #ymin = hDef.getParameter('yMin',mType)
+            #ymax = hDef.getParameter('yMax',mType)
+            ##histos[mType] = [ ROOT.TProfile(hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax,'S'), None, None, None ]
+            #histos[mType] = [ ROOT.TProfile(hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax), None, None, None ]
+            #tree.Project(hName+"_1",variable, \
+            #              cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
             # always keep final histogram in 4th position
             histos[mType][3] = histos[mType][0]
         elif is2D:
