@@ -318,12 +318,15 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             zmin = hDef.getParameter('zMin',mType)
             zmax = hDef.getParameter('zMax',mType)
             v3,v2,v1 = variable.split(":")
-            print(type(rdf))
-            print(v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2,v3)
-            print([hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax])
-            histos[mType] = [ rdf.Histo3D((hName+"_1",hName+"_1",nbx,float(xmin),float(xmax),nby,float(ymin),float(ymax),nbz,float(zmin),float(zmax)), \
-                                          v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2,v3), \
-                                          None, None, None ]
+            cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
+            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+            rdf,varMask3 = varMaskCombs(rdf,v3,cuts)
+            model = (hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax)
+            histos[mType] = [ rdf.Histo3D(model,varMask1,varMask2,varMask3), None, None, None ]
+            #histos[mType] = [ rdf.Histo3D((hName+"_1",hName+"_1",nbx,float(xmin),float(xmax),nby,float(ymin),float(ymax),nbz,float(zmin),float(zmax)), \
+            #                              v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2,v3), \
+            #                              None, None, None ]
             #histos[mType] = [ rdf.Histo3D((hName+"_1",hName+"_1",nbx,float(xmin),float(xmax),nby,float(ymin),float(ymax),nbz,float(zmin),float(zmax)), \
             #                              v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2,v3), \
             #                              None, None, None ]
@@ -399,9 +402,9 @@ def fillHistoByDef(tree,hDef,extraCuts,histos):
             # always keep final histogram in 4th position
             histos[mType][3] = histos[mType][0]
         elif is2D:
-            nby = hDef.getParameter('yNbins',mType)
-            ymin = hDef.getParameter('yMin',mType)
-            ymax = hDef.getParameter('yMax',mType)
+            #nby = hDef.getParameter('yNbins',mType)
+            #ymin = hDef.getParameter('yMin',mType)
+            #ymax = hDef.getParameter('yMax',mType)
             #histos[mType] = [ ROOT.TH2F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax), None, None, None ]
             #tree.Project(hName+"_1",variable, \
             #              cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
@@ -416,17 +419,17 @@ def fillHistoByDef(tree,hDef,extraCuts,histos):
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][0]
         elif is3D:
-            nby = hDef.getParameter('yNbins',mType)
-            ymin = hDef.getParameter('yMin',mType)
-            ymax = hDef.getParameter('yMax',mType)
-            nbz = hDef.getParameter('zNbins',mType)
-            zmin = hDef.getParameter('zMin',mType)
-            zmax = hDef.getParameter('zMax',mType)
-            histos[mType] = [ ROOT.TH3F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax), \
-                                  None, None, None ]
-            tree.Project(hName+"_1",variable, \
-                          cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
-            assert effCuts==None
+            #nby = hDef.getParameter('yNbins',mType)
+            #ymin = hDef.getParameter('yMin',mType)
+            #ymax = hDef.getParameter('yMax',mType)
+            #nbz = hDef.getParameter('zNbins',mType)
+            #zmin = hDef.getParameter('zMin',mType)
+            #zmax = hDef.getParameter('zMax',mType)
+            #histos[mType] = [ ROOT.TH3F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax), \
+            #                      None, None, None ]
+            #tree.Project(hName+"_1",variable, \
+            #              cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
+            #assert effCuts==None
             # always keep final histogram in 4th position
             histos[mType][3] = histos[mType][0]
         #print("Ending for ",hDef.name,hName,hTitle)

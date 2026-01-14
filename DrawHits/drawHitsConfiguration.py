@@ -189,7 +189,7 @@ class VarMaskCombinations:
         # use variable name and normalized selection string (remove spaces)
         #
         selNorm = selection.replace(" ","")
-        varMask = varName + "["+selNorm+"]"
+        varMask = "(" + varName + ")["+selNorm+"]"
         if varMask in self.varMaskDefinitions:
             # combination exists (assume that it's also defined in the RDataFrame)
             varMaskName = self.varMaskDefinitions[varMask]
