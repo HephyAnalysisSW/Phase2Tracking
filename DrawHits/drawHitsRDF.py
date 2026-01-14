@@ -281,7 +281,7 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
                 rdf,varMask = varMaskCombs(rdf,variable,cuts)
                 model = (hName+"_2",hName+"_2",nbx,xmin,xmax)
                 histos[mType][1] = rdf.Histo1D(model,varMask)
-            sys.exit()
+            #sys.exit()
         elif isProfile:
             ymin = hDef.getParameter('yMin',mType)
             ymax = hDef.getParameter('yMax',mType)
@@ -320,6 +320,7 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             assert effCuts==None
         #print("Ending for ",hDef.name,hName,hTitle)
                 
+        print(histos)
         sys.exit()
     return histos
 
@@ -365,13 +366,13 @@ def fillHistoByDef(tree,hDef,extraCuts):
         xmax = hDef.getParameter('xMax',mType)
         #print("Starting for ",hDef.name,hName,hTitle)
         if is1D and ( not isProfile ):
-            histos[mType] = [ ROOT.TH1F(hName+"_1",hName+"_1",nbx,xmin,xmax), None, None, None ]
-            tree.Project(hName+"_1",variable, \
-                        cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
+            #histos[mType] = [ ROOT.TH1F(hName+"_1",hName+"_1",nbx,xmin,xmax), None, None, None ]
+            #tree.Project(hName+"_1",variable, \
+            #            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
             if effCuts!=None:
-                histos[mType][1] = ROOT.TH1F(hName+"_2",hName+"_2",nbx,xmin,xmax)
-                tree.Project(hName+"_2",variable, \
-                            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
+                #histos[mType][1] = ROOT.TH1F(hName+"_2",hName+"_2",nbx,xmin,xmax)
+                #tree.Project(hName+"_2",variable, \
+                #            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
                 histos[mType][3] = ROOT.TEfficiency(histos[mType][1],histos[mType][0])
                 histos[mType][3].SetMarkerStyle(20)
             else:
@@ -739,7 +740,7 @@ for cName in allHDefs.canvasNames():
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
         cHistos[hName] = createHistoByDef(simHitRDF,allHDefs.byCanvas[cName][hName],extraCuts,varMaskCombs)
-sys.exit()
+#sys.exit()
 
 allObjects = [ ]
 for cName in allHDefs.canvasNames():
