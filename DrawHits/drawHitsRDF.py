@@ -319,15 +319,16 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             #                              None, None, None ]
             assert effCuts==None
         #print("Ending for ",hDef.name,hName,hTitle)
-                
-        print(histos)
-        sys.exit()
+
+    #for mType in range(23,26):
+    #    print(histos[mType][0].GetEntries(),histos[mType][1].GetEntries())
+    #sys.exit()
     return histos
 
 
 
-def fillHistoByDef(tree,hDef,extraCuts):
-    histos = { }
+def fillHistoByDef(tree,hDef,extraCuts,histos):
+    #histos = { }
 
     savedDir = ROOT.gDirectory
     ROOT.gROOT.cd()
@@ -373,7 +374,7 @@ def fillHistoByDef(tree,hDef,extraCuts):
                 #histos[mType][1] = ROOT.TH1F(hName+"_2",hName+"_2",nbx,xmin,xmax)
                 #tree.Project(hName+"_2",variable, \
                 #            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
-                histos[mType][3] = ROOT.TEfficiency(histos[mType][1],histos[mType][0])
+                histos[mType][3] = ROOT.TEfficiency(histos[mType][1].GetValue(),histos[mType][0].GetValue())
                 histos[mType][3].SetMarkerStyle(20)
             else:
                 # always keep final histogram in 4th position
@@ -485,7 +486,7 @@ def drawHistoByDef(histos,hDef,logY=False,logZ=False,same=False):
                 histos[mType][2].SetTitle(hTitle)
                 histos[mType][2].GetXaxis().SetTitle(xtitle)
                 histos[mType][2].GetYaxis().SetTitle(ytitle)
-                histos[mType][3] = ROOT.TEfficiency(histos[mType][1],histos[mType][0])
+                histos[mType][3] = ROOT.TEfficiency(histos[mType][1].GetValue(),histos[mType][0].GetValue())
                 histos[mType][3].SetMarkerStyle(20)
                 histos[mType][3].Draw("same Z")
             else:
@@ -736,10 +737,12 @@ histos = { }
 paves = [ ]
 varMaskCombs = VarMaskCombinations()
 
+allHistos = { }
 for cName in allHDefs.canvasNames():
+    allHistos[cName] = {}
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
-        cHistos[hName] = createHistoByDef(simHitRDF,allHDefs.byCanvas[cName][hName],extraCuts,varMaskCombs)
+        allHistos[cName][hName] = createHistoByDef(simHitRDF,allHDefs.byCanvas[cName][hName],extraCuts,varMaskCombs)
 #sys.exit()
 
 allObjects = [ ]
@@ -748,8 +751,11 @@ for cName in allHDefs.canvasNames():
     cHistos = { }
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
-        cHistos[hName] = fillHistoByDef(simHitTree,allHDefs.byCanvas[cName][hName],extraCuts)
-        allObjects.append(drawHistoByDef(cHistos[hName],allHDefs.byCanvas[cName][hName], \
+        print(allHistos[cName][hName])
+        #cHistos[hName] = fillHistoByDef(simHitTree,allHDefs.byCanvas[cName][hName],extraCuts,allHistos[cName][hName])
+        fillHistoByDef(simHitTree,allHDefs.byCanvas[cName][hName],extraCuts,allHistos[cName][hName])
+        print(allHistos[cName][hName])
+        allObjects.append(drawHistoByDef(allHistos[cName][hName],allHDefs.byCanvas[cName][hName], \
                                              logY=args.logY,logZ=args.logZ,same=same))
         same = True
     if args.output!=None:
@@ -763,6 +769,7 @@ for cName in allHDefs.canvasNames():
         print(basename)
         for fmt in outputFormats:
             c.SaveAs(basename+"."+fmt)
+            
 #    yMin = min([ x.GetMinimum() for x in cHistos
 #sys.exit()
 

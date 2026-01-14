@@ -3,11 +3,13 @@
 #
 variables:
    pathX: 'path.fCoordinates.fX'
+   pathY: 'path.fCoordinates.fY'
    pathZ: 'path.fCoordinates.fZ'
    dxdz: 'pathX/pathZ'
    alpha: 'atan2(abs(pathX),abs(pathZ))/3.1415*180'
    localPosX: 'localPos.fCoordinates.fX'
    rhLocalPosX: 'rhLocalPos.fCoordinates.fX'
+   rhLocalErrX: 'rhLocalErr.fCoordinates.fX'
    localPosXMod90: 'floatMod(10000*localPos.fCoordinates.fX,90)'
    localPosXMod100: 'floatMod(10000*localPos.fCoordinates.fX,100)'
    globRho2: 'globalDir.fCoordinates.fX*globalDir.fCoordinates.fX+globalDir.fCoordinates.fY*globalDir.fCoordinates.fY'
@@ -231,7 +233,7 @@ histograms:
 #
   pathX:
      histogramTitle: 'path (x)'
-     variable: '10000*abs(path.x())'
+     variable: '10000*abs(pathX)'
      baseCuts: 'tof<12.5&&pabs>0.3'
      xTitle: 'SimHit path (x) [#mum]'
      xNbins: 200
@@ -242,7 +244,7 @@ histograms:
 #
   pathY:
      histogramTitle: 'path (y)'
-     variable: '10000*abs(path.y())'
+     variable: '10000*abs(pathY)'
      baseCuts: 'tof<12.5&&pabs>0.3'
      xTitle: 'SimHit path (y [#mum])'
      xNbins: 200
@@ -253,7 +255,7 @@ histograms:
 #
   pullX:
      histogramTitle: 'pulls (x)'
-     variable: '(localPosX-rhLocalPosX)/rhLocalErr.x()'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErrX'
      baseCuts: 'tof<12.5&&hasRecHit>0'
      xTitle: 'pull local x'
      xNbins: 200
@@ -325,7 +327,7 @@ histograms:
 #
   stdRes2D:
      histogramTitle: 'my resolution'
-     variable: 'abs(path.x()):localPosX-rhLocalPosX'
+     variable: 'abs(pathX):localPosX-rhLocalPosX'
      baseCuts: 'tof<12.5&&hasRecHit>0'
      xTitle: 'residual x [cm]'
      xNbins: 200
@@ -430,7 +432,7 @@ histograms:
 #
   widthVsPath:
      histogramTitle: 'width vs path'
-     variable: 'clusterSize:abs(path.x())'
+     variable: 'clusterSize:abs(pathX)'
      baseCuts: 'tof<12.5&&hasRecHit>0'
      profile: true
      xTitle: 'SimHit path (x)'
@@ -454,19 +456,19 @@ histograms:
      zMin: -1.05
      zMax: 1.05
      mType23:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 20
         yMin: 0
         yMax: 100
      mType24:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 20
         yMin: 0
         yMax: 100
      mType25:
-        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod90:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 90 #mum [#mum]'
         yNbins: 18
         yMin: 0
@@ -484,19 +486,19 @@ histograms:
      zMin: -1.05
      zMax: 1.05
      mType23:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType24:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType25:
-        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod90:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 90 #mum [#mum]'
         yNbins: 1
         yMin: 0
@@ -514,19 +516,19 @@ histograms:
      zMin: -1.05
      zMax: 1.05
      mType23:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType24:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType25:
-        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod90:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 90 #mum [#mum]'
         yNbins: 1
         yMin: 0
@@ -544,19 +546,19 @@ histograms:
      zMin: -1.05
      zMax: 1.05
      mType23:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType24:
-        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod100:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType25:
-        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        variable: 'pathX/pathZ:localPosXMod90:10000*(localPosX-rhLocalPosX)'
         yTitle: 'x modulo 90 #mum [#mum]'
         yNbins: 1
         yMin: 0
@@ -574,19 +576,19 @@ histograms:
      zMin: -1.05
      zMax: 1.05
      mType23:
-        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType24:
-        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType25:
-        variable: 'path.x()/path.z():localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 90 #mum [#mum]'
         yNbins: 1
         yMin: 0
@@ -604,19 +606,19 @@ histograms:
      zMin: -1.05
      zMax: 1.05
      mType23:
-        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType24:
-        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType25:
-        variable: 'path.x()/path.z():localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 90 #mum [#mum]'
         yNbins: 1
         yMin: 0
@@ -634,26 +636,26 @@ histograms:
      zMin: -1.05
      zMax: 1.05
      mType23:
-        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType24:
-        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 100 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 100
      mType25:
-        variable: 'path.x()/path.z():localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        variable: 'pathX/pathZ:localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErrX'
         yTitle: 'x modulo 90 #mum [#mum]'
         yNbins: 1
         yMin: 0
         yMax: 90
 
   effDxDz:
-     variable: 'path.x()/path.z()'
+     variable: 'pathX/pathZ'
      histogramTitle: 'efficiency (dx/dz)'
      baseCuts: 'tof<12.5'
      effCuts: 'hasRecHit>0'
@@ -663,7 +665,7 @@ histograms:
      xMax: 1.05
 
   effDxDzW1:
-     variable: 'path.x()/path.z()'
+     variable: 'pathX/pathZ'
      histogramTitle: 'efficiency, 1-strip clusters (dx/dz)'
      baseCuts: 'tof<12.5'
      effCuts: 'hasRecHit>0&&clusterSize==1'
@@ -673,7 +675,7 @@ histograms:
      xMax: 1.05
 
   effDxDzW2:
-     variable: 'path.x()/path.z()'
+     variable: 'pathX/pathZ'
      histogramTitle: 'efficiency, 2-strip clusters (dx/dz)'
      baseCuts: 'tof<12.5'
      effCuts: 'hasRecHit>0&&clusterSize==2'
