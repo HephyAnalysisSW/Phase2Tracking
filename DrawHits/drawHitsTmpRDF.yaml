@@ -1,0 +1,684 @@
+#
+# definitions of new variables
+#
+variables:
+   pathX: 'path.fCoordinates.fX'
+   pathZ: 'path.fCoordinates.fZ'
+   dxdz: 'pathX/pathZ'
+   alpha: 'atan2(abs(pathX),abs(pathZ))/3.1415*180'
+   localPosX: 'localPos.fCoordinates.fX'
+   rhLocalPosX: 'rhLocalPos.fCoordinates.fX'
+   localPosXMod90: 'floatMod(10000*localPos.fCoordinates.fX,90)'
+   localPosXMod100: 'floatMod(10000*localPos.fCoordinates.fX,100)'
+   globRho2: 'globalDir.fCoordinates.fX*globalDir.fCoordinates.fX+globalDir.fCoordinates.fY*globalDir.fCoordinates.fY'
+   globR2: 'globRho2+globalDir.fCoordinates.fZ*globalDir.fCoordinates.fZ'
+   globPt: 'pabs*sqrt(sqrt(globRho2/globR2))'
+   detNormalT: 'detNormal.fCoordinates.fX*detNormal.fCoordinates.fX+detNormal.fCoordinates.fY*detNormal.fCoordinates.fY'
+#
+# definitions of canvases and histograms
+#
+histograms:
+#
+#
+#
+  effAlphaTight:
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     effCuts: 'hasRecHit>0&&abs(localPosX-rhLocalPosX)<0.0075'
+     histogramTitle: 'Efficiency vs. alpha(xz) tight'
+     variable: 'alpha0'
+     xMax: 100.0
+     xMin: 0
+     xNbins: 100
+     xTitle: 'alpha(xz) [deg]'
+     yMax: 1.05
+     yMin: 0.5
+     yTitle: 'efficiency'
+#
+#
+#
+  effAlphaLoose:
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     effCuts: 'hasRecHit>0&&abs(localPosX-rhLocalPosX)<0.1'
+     histogramTitle: 'Efficiency vs. alpha(xz) loose'
+     variable: 'alpha0'
+     xMax: 100.0
+     xMin: 0
+     xNbins: 100
+     xTitle: 'alpha(xz) [deg]'
+     yMax: 1.05
+     yMin: 0.5
+     yTitle: 'efficiency'
+#
+#
+#
+  effVsModX:
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     effCuts: 'hasRecHit>0&&abs(localPosX-rhLocalPosX)<0.0075'
+     yMin: 0
+     yMax: 1.05
+     mType23:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType24:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType25:
+        histogramTitle: 'Efficiency vs. x % 90 #mu m'
+        variable: 'localPosXMod90'
+        xTitle: 'x modulo 90 #mu m [#mu m]'
+        xNbins: 200
+        xMax: 95
+        xMin: -5
+
+  effVsModX1:
+     baseCuts: 'tof<12.5&&pabs>0.3&&globPt>0.5&&hasRecHit>0'
+     effCuts: 'clusterSize==1'
+     yMin: 0
+     yMax: 1.05
+     mType23:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType24:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType25:
+        histogramTitle: 'Efficiency vs. x % 90 #mu m'
+        variable: 'localPosXMod90'
+        xTitle: 'x modulo 90 #mu m [#mu m]'
+        xNbins: 200
+        xMax: 95
+        xMin: -5
+
+  effVsModX2:
+     baseCuts: 'tof<12.5&&pabs>0.3&&pabs*globalDir.Rho()/globalDir.R()>0.5&&hasRecHit>0'
+     effCuts: 'clusterSize==2'
+     yMin: 0
+     yMax: 1.05
+     mType23:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType24:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType25:
+        histogramTitle: 'Efficiency vs. x % 90 #mu m'
+        variable: 'localPosXMod90'
+        xTitle: 'x modulo 90 #mu m [#mu m]'
+        xNbins: 200
+        xMax: 95
+        xMin: -5
+
+  effVsModX3p:
+     baseCuts: 'tof<12.5&&pabs>0.3&&pabs*globalDir.Rho()/globalDir.R()>0.5&&hasRecHit>0'
+     effCuts: 'clusterSize>2'
+     yMin: 0
+     yMax: 1.05
+     mType23:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType24:
+        histogramTitle: 'Efficiency vs. x % 100 #mu m'
+        variable: 'localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 220
+        xMax: 105
+        xMin: -5
+     mType25:
+        histogramTitle: 'Efficiency vs. x % 90 #mu m'
+        variable: 'localPosXMod90'
+        xTitle: 'x modulo 90 #mu m [#mu m]'
+        xNbins: 200
+        xMax: 95
+        xMin: -5
+#
+#
+#
+  effVsModY:
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     effCuts: 'hasRecHit>0&&abs(localPosX-rhLocalPosX)<0.0075'
+     yMin: 0
+     yMax: 1.05
+     mType23:
+        histogramTitle: 'Efficiency vs. y % 1.5 mm'
+        variable: 'floatMod(100*localPos.y(),15)/10.'
+        xTitle: 'y modulo 1.5mm [mm]'
+        xNbins: 400
+        xMax: 1.75
+        xMin: -0.25
+     mType24:
+        histogramTitle: 'Efficiency vs. y % 2.5 cm'
+        variable: 'floatMod(10*localPos.y(),25)/10.'
+        xTitle: 'y modulo 2.5cm [cm]'
+        xNbins: 600
+        xMax: 2.75
+        xMin: -0.25
+     mType25:
+        histogramTitle: 'Efficiency vs. y % 5 cm'
+        variable: 'floatMod(10*localPos.y(),50)/10.'
+        xTitle: 'y modulo 5cm [cm]'
+        xNbins: 550
+        xMax: 5.25
+        xMin: -0.25
+#
+#
+#
+  effX:
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     effCuts: 'hasRecHit>0&&abs(localPosX-rhLocalPosX)<0.0075'
+     histogramTitle: 'Efficiency 1D'
+     variable: 'localPosX'
+     xTitle: 'local x [cm]'
+     yMax: 1.05
+     yMin: 0.8
+     yTitle: 'efficiency'
+     mType23:
+        xMax: 5.5
+        xMin: -5.5
+        xNbins: 550
+     mType24:
+        xMax: 5.0
+        xMin: -5.0
+        xNbins: 250
+     mType25:
+        xMax: 5
+        xMin: -5
+        xNbins: 250
+#
+#
+#
+  effY:
+     variable: 'localPos.y()'
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     effCuts: 'hasRecHit>0&&abs(localPosX-rhLocalPosX)<0.0075'
+     histogramTitle: 'Efficiency Y 1D'
+     xTitle: 'local y [cm]'
+     xNbins: 550
+     xMax: 5.5
+     xMin: -5.5
+     yTitle: 'efficiency'
+     yMax: 1.05
+     yMin: 0.8
+#
+#
+#
+  pathX:
+     histogramTitle: 'path (x)'
+     variable: '10000*abs(path.x())'
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     xTitle: 'SimHit path (x) [#mum]'
+     xNbins: 200
+     xMax: 1000
+     xMin: 0
+#
+#
+#
+  pathY:
+     histogramTitle: 'path (y)'
+     variable: '10000*abs(path.y())'
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     xTitle: 'SimHit path (y [#mum])'
+     xNbins: 200
+     xMax: 2000
+     xMin: 0
+#
+#
+#
+  pullX:
+     histogramTitle: 'pulls (x)'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErr.x()'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'pull local x'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     logY: true
+#
+#
+#
+  resX:
+     histogramTitle: 'residuals (x)'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     logY: true
+#
+#
+#
+  resX1:
+     histogramTitle: 'residuals (x) - cluster size 1'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     logY: true
+#
+#
+#
+  resX2:
+     histogramTitle: 'residuals (x) - cluster size 2'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     logY: true
+#
+#
+#
+  resX3P:
+     histogramTitle: 'residuals (x) - cluster size >2'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize>2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     logY: true
+#
+#
+#
+  resY:
+     histogramTitle: 'pulls (y)'
+     variable: '(localPos.y()-rhLocalPos.y())/rhLocalErr.y()'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'pull local y'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     logY: true
+#
+#
+#
+  stdRes2D:
+     histogramTitle: 'my resolution'
+     variable: 'abs(path.x()):localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'residual x [cm]'
+     xNbins: 200
+     xMin: -0.1
+     xMax: 0.1
+     yTitle: 'dx [cm]'
+     yNbins: 20
+     yMin: 0.0
+     yMax: 0.1
+#
+#
+#
+  widthVsMod2DX:
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     yTitle: 'cluster width'
+     yNbins: 10
+     yMin: 0
+     yMax: 10
+     mType23:
+        histogramTitle: 'width vs x modula 100 #mu m'
+        variable: 'clusterSize:localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 110
+        xMin: -5
+        xMax: 105
+     mType24:
+        histogramTitle: 'width vs x modula 100 #mu m'
+        variable: 'clusterSize:localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 110
+        xMin: -5
+        xMax: 105
+     mType25:
+        histogramTitle: 'width vs x modula 90 #mu m'
+        variable: 'clusterSize:localPosXMod90'
+        xTitle: 'x modulo 90 #mu m [#mu m]'
+        xNbins: 100
+        xMin: -5
+        xMax: 95
+#
+#
+#
+  widthVsModX:
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     profile: true
+     yTitle: 'cluster width'
+     yMin: 0
+     yMax: 25
+     mType23:
+        histogramTitle: 'width vs x modula 100 #mu m'
+        variable: 'clusterSize:localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 110
+        xMin: -5
+        xMax: 105
+     mType24:
+        histogramTitle: 'width vs x modula 100 #mu m'
+        variable: 'clusterSize:localPosXMod100'
+        xTitle: 'x modulo 100 #mu m [#mu m]'
+        xNbins: 110
+        xMin: -5
+        xMax: 105
+     mType25:
+        histogramTitle: 'width vs x modula 90 #mu m'
+        variable: 'clusterSize:localPosXMod90'
+        xTitle: 'x modulo 90 #mu m [#mu m]'
+        xNbins: 100
+        xMin: -5
+        xMax: 95
+#
+#
+#
+  widthVsModY: 
+     baseCuts: 'tof<12.5&&pabs>0.3'
+     yTitle: 'cluster width'
+     yMin: 0
+     yMax: 25
+     profile: true
+     mType23:
+        histogramTitle: 'Width vs. y % 1.5 mm'
+        variable: 'clusterSize:floatMod(100*localPos.y(),15)/10.'
+        xTitle: 'y modulo 1.5mm [mm]'
+        xNbins: 200
+        xMin: -0.25
+        xMax: 1.75
+     mType24:
+        histogramTitle: 'Width vs. y % 2.5 cm'
+        variable: 'clusterSize:floatMod(10*localPos.y(),25)/10.'
+        xTitle: 'y modulo 2.5cm [cm]'
+        xNbins: 300
+        xMin: -0.25
+        xMax: 2.75
+     mType25:
+        histogramTitle: 'Width vs. y % 5 cm'
+        variable: 'clusterSize:floatMod(10*localPos.y(),50)/10.'
+        xTitle: 'y modulo 5cm [cm]'
+        xNbins: 275
+        xMin: -0.25
+        xMax: 5.25
+#
+#
+#
+  widthVsPath:
+     histogramTitle: 'width vs path'
+     variable: 'clusterSize:abs(path.x())'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     profile: true
+     xTitle: 'SimHit path (x)'
+     xNbins: 100
+     xMin: 0
+     xMax: 0.2
+     yTitle: 'clustersize'
+     yNbins: 25
+     yMin: 0.0
+     yMax: 25
+
+  res3DXVsDxDzModX:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -500
+     xMax: 500
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 20
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 20
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 18
+        yMin: 0
+        yMax: 90
+
+  res3DXVsDxDz:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -200
+     xMax: 200
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  res3DXVsDxDzW1:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -200
+     xMax: 200
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  res3DXVsDxDzW2:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -200
+     xMax: 200
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'path.x()/path.z():localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'path.x()/path.z():localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  pull3DXVsDxDz:
+     histogramTitle: 'pulls 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -10
+     xMax: 10
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'path.x()/path.z():localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  pull3DXVsDxDzW1:
+     histogramTitle: 'pulls 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -10
+     xMax: 10
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'path.x()/path.z():localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  pull3DXVsDxDzW2:
+     histogramTitle: 'pulls 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -10
+     xMax: 10
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'path.x()/path.z():localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'path.x()/path.z():localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErr.x()'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  effDxDz:
+     variable: 'path.x()/path.z()'
+     histogramTitle: 'efficiency (dx/dz)'
+     baseCuts: 'tof<12.5'
+     effCuts: 'hasRecHit>0'
+     xTitle: 'local dx/dz'
+     xNbins: 21
+     xMin: -1.05
+     xMax: 1.05
+
+  effDxDzW1:
+     variable: 'path.x()/path.z()'
+     histogramTitle: 'efficiency, 1-strip clusters (dx/dz)'
+     baseCuts: 'tof<12.5'
+     effCuts: 'hasRecHit>0&&clusterSize==1'
+     xTitle: 'local dx/dz'
+     xNbins: 21
+     xMin: -1.05
+     xMax: 1.05
+
+  effDxDzW2:
+     variable: 'path.x()/path.z()'
+     histogramTitle: 'efficiency, 2-strip clusters (dx/dz)'
+     baseCuts: 'tof<12.5'
+     effCuts: 'hasRecHit>0&&clusterSize==2'
+     xTitle: 'local dx/dz'
+     xNbins: 21
+     xMin: -1.05
+     xMax: 1.05
+
