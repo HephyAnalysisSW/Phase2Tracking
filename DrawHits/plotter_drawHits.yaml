@@ -30,6 +30,9 @@ new_variables:
    rhLocalPosX: 'rhLocalPos.fCoordinates.fX'
    localPosXMod90: 'floatMod(10000*localPos.fCoordinates.fX,90)'
    localPosXMod100: 'floatMod(10000*localPos.fCoordinates.fX,100)'
+   globRho2: 'globalDir.fCoordinates.fX*globalDir.fCoordinates.fX+globalDir.fCoordinates.fY*globalDir.fCoordinates.fY'
+   globR2: 'globRho2+globalDir.fCoordinates.fZ*globalDir.fCoordinates.fZ'
+   globPt: 'sqrt(pabs*sqrt(globRho2/globR2))'
    #pathX: 'ROOT::VecOps::Map(path, [](ROOT::Math::XYZVectorF x){return 3.;})'
    #dxdz: 'path.fCoordinates.fX/path.fCoordinates.fZ'
    
@@ -90,6 +93,28 @@ objects:
     variables:
       - localPosXMod90
     2d_plots:
+  effVsModX1M23:
+    selections:
+      modX1M23_base: tof<12.5 && pabs>0.3 && pabs*globPt>0.5 && hasRecHit>0
+      modX1M23_1: clusterSize==1
+    variables:
+      - localPosXMod100
+    2d_plots:
+  effVsModX2M23:
+    selections:
+      modX2M23_base: tof<12.5 && pabs>0.3 && pabs*globPt>0.5 && hasRecHit>0
+      modX2M23_2: clusterSize==2
+    variables:
+      - localPosXMod100
+    2d_plots:
+  effVsModX3pM23:
+    selections:
+      modX3pM23_base: tof<12.5 && pabs>0.3 && pabs*globPt>0.5 && hasRecHit>0
+      modX3pM23_3p: clusterSize>2
+    variables:
+      - localPosXMod100
+    2d_plots:
+
 #  effVsModXM24:
 #     selections:
 #        modXM24_base: tof<12.5 && pabs>0.3
