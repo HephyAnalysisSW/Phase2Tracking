@@ -165,15 +165,11 @@ def cutLines(cuts,maxChar=40):
 def drawCutPave(cnv,ic,variable,cuts,effcuts=None):
     indBaseCuts = cuts.split("&&")
     indEffCuts = None if effcuts==None else effcuts.split("&&")
-    #print(indBaseCuts)
-    #print(indEffCuts)
     cnv.cd(ic+3)
     #hpave = 3*0.06+(len(indBaseCuts)+1)*0.04
     #if indEffCuts!=None:
     #    hpave += (len(indEffCuts)+2)*0.04
 
-    #print(ROOT.gPad.UtoPixel(0.),ROOT.gPad.UtoPixel(1.))
-    #print(ROOT.gPad.VtoPixel(0.),ROOT.gPad.VtoPixel(1.))
     allLines = [ ]
     allLines.append(('hdr','Variable(s)'))
     allLines.append(('txt',variable))
@@ -192,7 +188,6 @@ def drawCutPave(cnv,ic,variable,cuts,effcuts=None):
     #pave = ROOT.TPaveText(0.05,max(0,1.0-hpave),0.95,1.0)
     hpave = ((hdrPixels+txtPixels+2)*len([ x for x in allLines if x[0]=='hdr' ]) + \
              (txtPixels+2)*len([ x for x in allLines if x[0]=='txt' ])) / (ROOT.gPad.VtoPixel(0.)-ROOT.gPad.VtoPixel(1.))
-    #print(hpave)
     if hpave>1.:
         scale = 1./hpave
         hpave = 1
@@ -261,20 +256,9 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
         xmax = hDef.getParameter('xMax',mType)
         #print("Starting for ",hDef.name,hName,hTitle)
         if is1D and ( not isProfile ):
-            #print(variable+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]")
-            #histos[mType] = [ rdf.Histo1D((hName+"_1",hName+"_1",nbx,xmin,xmax), \
-            #                              variable+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]"), \
-            #                              None, None, None ]
-            #print(rdf.GetColumnNames())
-            #print(hName,effCuts)
-            #rdf = rdf.Define("pabsVar","pabs[pabs>0.3]")
-            #th1m = ROOT.RDF.TH1DModel(hName+"_1",hName+"_1",nbx,xmin,xmax)
-            #print(type(th1m))
             cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
             rdf,varMask = varMaskCombs(rdf,variable,cuts)
             model = (hName+"_1",hName+"_1",nbx,xmin,xmax)
-            #print(varMask)
-            #print(rdf.GetDefinedColumnNames())
             histos[mType] = [ rdf.Histo1D(model,varMask), None, None, None ]
             if effCuts!=None:
                 cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts)
@@ -324,18 +308,9 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             rdf,varMask3 = varMaskCombs(rdf,v3,cuts)
             model = (hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax)
             histos[mType] = [ rdf.Histo3D(model,varMask1,varMask2,varMask3), None, None, None ]
-            #histos[mType] = [ rdf.Histo3D((hName+"_1",hName+"_1",nbx,float(xmin),float(xmax),nby,float(ymin),float(ymax),nbz,float(zmin),float(zmax)), \
-            #                              v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2,v3), \
-            #                              None, None, None ]
-            #histos[mType] = [ rdf.Histo3D((hName+"_1",hName+"_1",nbx,float(xmin),float(xmax),nby,float(ymin),float(ymax),nbz,float(zmin),float(zmax)), \
-            #                              v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2,v3), \
-            #                              None, None, None ]
             assert effCuts==None
         #print("Ending for ",hDef.name,hName,hTitle)
 
-    #for mType in range(23,26):
-    #    print(histos[mType][0].GetEntries(),histos[mType][1].GetEntries())
-    #sys.exit()
     return rdf,histos
 
 
@@ -345,14 +320,8 @@ def fillHistoByDef(tree,hDef,extraCuts,histos):
 
     savedDir = ROOT.gDirectory
     ROOT.gROOT.cd()
-    #cnv = ROOT.TCanvas(hDef.getParameter('canvasName'),hDef.getParameter('canvasName'),1000,1000)
-    #result['cnv'] = cnv
-    #cnv.Divide(2,2)
-
-    #print(hDef['canvasName'],'is',is1D)
     
     ic = 0
-    #hEffVs = { }
     for mType in range(23,26):
         #print("Checking mType",mType,"for",hDef.name)
         ic += 1
@@ -369,10 +338,6 @@ def fillHistoByDef(tree,hDef,extraCuts,histos):
         variable = hDef.getParameter('variable',mType)
         ##
         #cnv.cd(ic)
-        #ROOT.gPad.SetGridx(1)
-        #ROOT.gPad.SetGridy(1)
-        #if not is1D:
-        #    ROOT.gPad.SetRightMargin(0.125)
         hName = hDef.getParameter('histogramName',mType) + str(mType)
         hTitle = hDef.getParameter('histogramTitle',mType) + " module type " +str(mType)
         nbx = hDef.getParameter('xNbins',mType)
@@ -380,56 +345,23 @@ def fillHistoByDef(tree,hDef,extraCuts,histos):
         xmax = hDef.getParameter('xMax',mType)
         #print("Starting for ",hDef.name,hName,hTitle)
         if is1D and ( not isProfile ):
-            #histos[mType] = [ ROOT.TH1F(hName+"_1",hName+"_1",nbx,xmin,xmax), None, None, None ]
-            #tree.Project(hName+"_1",variable, \
-            #            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
             if effCuts!=None:
-                #histos[mType][1] = ROOT.TH1F(hName+"_2",hName+"_2",nbx,xmin,xmax)
-                #tree.Project(hName+"_2",variable, \
-                #            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
                 histos[mType][3] = ROOT.TEfficiency(histos[mType][1].GetValue(),histos[mType][0].GetValue())
                 histos[mType][3].SetMarkerStyle(20)
             else:
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][0]
         elif isProfile:
-            #ymin = hDef.getParameter('yMin',mType)
-            #ymax = hDef.getParameter('yMax',mType)
-            ##histos[mType] = [ ROOT.TProfile(hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax,'S'), None, None, None ]
-            #histos[mType] = [ ROOT.TProfile(hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax), None, None, None ]
-            #tree.Project(hName+"_1",variable, \
-            #              cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
             # always keep final histogram in 4th position
             histos[mType][3] = histos[mType][0]
         elif is2D:
-            #nby = hDef.getParameter('yNbins',mType)
-            #ymin = hDef.getParameter('yMin',mType)
-            #ymax = hDef.getParameter('yMax',mType)
-            #histos[mType] = [ ROOT.TH2F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax), None, None, None ]
-            #tree.Project(hName+"_1",variable, \
-            #              cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
             if effCuts!=None:
-                #histos[mType][1] = ROOT.TH2F(hName+"_2",hName+"_2",nbx,xmin,xmax,nby,ymin,ymax)
-                #tree.Project(hName+"_2",variable, \
-                #            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
-                #histos[mType][1].Divide(histos[mType][0])
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][1].Divide(histos[mType][0].GetValue())
             else:
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][0]
         elif is3D:
-            #nby = hDef.getParameter('yNbins',mType)
-            #ymin = hDef.getParameter('yMin',mType)
-            #ymax = hDef.getParameter('yMax',mType)
-            #nbz = hDef.getParameter('zNbins',mType)
-            #zmin = hDef.getParameter('zMin',mType)
-            #zmax = hDef.getParameter('zMax',mType)
-            #histos[mType] = [ ROOT.TH3F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax), \
-            #                      None, None, None ]
-            #tree.Project(hName+"_1",variable, \
-            #              cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
-            #assert effCuts==None
             # always keep final histogram in 4th position
             histos[mType][3] = histos[mType][0]
         #print("Ending for ",hDef.name,hName,hTitle)
@@ -592,13 +524,6 @@ def addHistogram(varString,cuts,effCuts=None,name='userHist'):
     extraHDict['baseCuts'] = cuts
     if effCuts!=None:
         extraHDict['effCuts'] = effCuts
-    #xxx = HistogramDefinition("effV",extraHDict)
-    #print("xxx",xxx)
-    #print("xxx",xxx.parameters)
-    #allHDefs.add(HistogramDefinition("effV",extraHDict))
-    #print(allHDefs.allDefinitions.keys())
-    #print(allHDefs.allCanvases)
-    #print(allHDefs['hEffArg'])
     return HistogramDefinition(name,extraHDict)
 
 
@@ -667,43 +592,6 @@ if args.listHistograms:
 for ih,h in enumerate(args.histogram):
     allHDefs.add(addHistogram(h,args.cuts,args.effCuts,name="userH"+str(ih+1)))
 
-#!#     varEffDict = { }
-#!#     # split into string defining the variable(s) and (1 or 2) axis definition(s)
-#!#     fields1 = args.varEff.split(";")
-#!#     assert len(fields1)<=3
-#!#     varEffDict['variable'] = fields1[0]
-#!#     #varEffDict['canvasName'] = "cEffArg"
-#!#     #varEffDict['histogramName'] = "hEffArg"
-#!#     varEffDict['histogramTitle'] = "hEffArg"
-#!#     # x-axis
-#!#     fields2 = fields1[1].split(",")
-#!#     assert len(fields2)==3 
-#!#     varEffDict['xNbins'] = int(fields2[0])
-#!#     varEffDict['xMin'] = float(fields2[1])
-#!#     varEffDict['xMax'] = float(fields2[2])
-#!#     # check for info on y axis (== presence of 2nd variable)
-#!#     if len(fields1)==3:
-#!#         assert ":" in varEffDict['variable']
-#!#         fields3 = fields1[2].split(",")
-#!#         varEffDict['yNbins'] = int(fields3[0])
-#!#         varEffDict['yMin'] = float(fields3[1])
-#!#         varEffDict['yMax'] = float(fields3[2])
-#!#         varEffDict['xTitle'] = varEffDict['variable'].split(":")[1]
-#!#         varEffDict['yTitle'] = varEffDict['variable'].split(":")[0]
-#!#     else:
-#!#         varEffDict['yMin'] = 0.
-#!#         varEffDict['yMax'] = 1.05
-#!#         varEffDict['xTitle'] = varEffDict['variable']
-#!#         varEffDict['yTitle'] = 'efficiency'
-#!#     varEffDict['baseCuts'] = args.cuts
-#!#     varEffDict['effCuts'] = cutString("hasRecHit>0","abs(localPos.x()-rhLocalPos.x())<"+str(args.dxMax))
-#!#     #xxx = HistogramDefinition("effV",varEffDict)
-#!#     #print("xxx",xxx)
-#!#     #print("xxx",xxx.parameters)
-#!#     allHDefs.add(HistogramDefinition("effV",varEffDict))
-#!#     #print(allHDefs.allDefinitions.keys())
-#!#     #print(allHDefs.allCanvases)
-#!#     #print(allHDefs['hEffArg'])
         
 #extraCuts = "abs(particleType)==13"
 #extraCuts = "tof<12.5"
@@ -759,7 +647,6 @@ for cName in allHDefs.canvasNames():
         except:
             print("Exception for",cName,hName)
             raise
-#sys.exit()
 
 allObjects = [ ]
 for cName in allHDefs.canvasNames():
@@ -768,9 +655,7 @@ for cName in allHDefs.canvasNames():
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
         print(allHistos[cName][hName])
-        #cHistos[hName] = fillHistoByDef(simHitTree,allHDefs.byCanvas[cName][hName],extraCuts,allHistos[cName][hName])
         fillHistoByDef(simHitTree,allHDefs.byCanvas[cName][hName],extraCuts,allHistos[cName][hName])
-        print(allHistos[cName][hName])
         allObjects.append(drawHistoByDef(allHistos[cName][hName],allHDefs.byCanvas[cName][hName], \
                                              logY=args.logY,logZ=args.logZ,same=same))
         same = True
@@ -789,32 +674,3 @@ for cName in allHDefs.canvasNames():
 #    yMin = min([ x.GetMinimum() for x in cHistos
 #sys.exit()
 
-#!# allObjects = [ ]
-#!# for hdef in allHDefs.allDefinitions.values():
-#!#     #
-#!#     # draw histograms according to definition
-#!#     #
-#!#     histos = fillHistoByDef(simHitTree,hdef,extraCuts)
-#!#     allObjects.append(drawHistoByDef(histos,hdef))
-#!#     #
-#!#     # perform fit of resolution histogram
-#!#     #
-#!#     if hdef.name in fitResiduals:
-#!#         objects = allObjects[-1]
-#!#         cnv = objects['cnv']
-#!#         # fit and redraw each panel
-#!#         ic = 0
-#!#         for mType in range(23,26):
-#!#             ic += 1
-#!#             cnv.cd(ic)
-#!#             f = fitHistogram(mType,objects['histos'][mType][0])
-
-
-#if args.output!=None:
-#    for c in [ x['cnv'] for x in allObjects ]:
-#        basename = os.path.join(args.output,c.GetName())
-#        if args.sampleName!=None:
-#            basename += "_" + args.sampleName
-#        print(basename)
-#        c.SaveAs(basename+".pdf")
-#        c.SaveAs(basename+".png")

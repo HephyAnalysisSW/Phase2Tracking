@@ -193,7 +193,6 @@ class VarMaskCombinations:
         if varMask in self.varMaskDefinitions:
             # combination exists (assume that it's also defined in the RDataFrame)
             varMaskName = self.varMaskDefinitions[varMask]
-            print("*** found",varMaskName,"for",varMask,"in local definitions")
             assert varMaskName in rdf.GetDefinedColumnNames()
         else:
             # create name for combination and define it in the RDataFrame
@@ -201,9 +200,9 @@ class VarMaskCombinations:
             varMaskName = "varMask{:03d}".format(n)
             self.varMaskDefinitions[varMask] = varMaskName
             rdf = rdf.Define(varMaskName,varMask)
-            print("+++ defined new var + mask combinations:",varMaskName,varMask)
-            print(rdf.GetDefinedColumnNames())
-            print("+++")
+            #print("+++ defined new var + mask combinations:",varMaskName,varMask)
+            #print(rdf.GetDefinedColumnNames())
+            #print("+++")
         return rdf,varMaskName
         
         
@@ -274,40 +273,5 @@ def loadConfiguration(configName,selectedNames=[],vetoedNames=[]):
         hDefs.add(hDef)
         print("Added",hDef.getParameter('canvasName'))
         
-#!#     moduleName = configName[:-3] if configName.endswith(".py") else configName
-#!#     module = __import__(moduleName)
-#!#     for n in dir(module):
-#!#         if n.startswith('__'):
-#!#             continue
-#!#         hDict = getattr(module,n)
-#!#         #print(n,type(hDict))
-#!#         #sys.exit()
-#!#         assert type(hDict)==dict
-#!#         #
-#!#         # check if in list of histograms to be displayed
-#!#         #
-#!#         selFlg = False
-#!#         for p in selectedNames:
-#!#             if fnmatch(n,p):
-#!#                 selFlg = True
-#!#                 break
-#!#         if not selFlg:
-#!#             continue
-#!#         #
-#!#         # check if in list of histograms to be vetoed
-#!#         #
-#!#         selFlg = True
-#!#         for p in vetoedNames:
-#!#             if fnmatch(n,p):
-#!#                 selFlg = False
-#!#                 break
-#!#         if not selFlg:
-#!#             continue
-#!#         #
-#!#         # add histogram
-#!#         #
-#!#         hDef = HistogramDefinition(n,hDict)
-#!#         hDefs.add(hDef)
-#!#         print("Added",hDef.getParameter('canvasName'))
     return ( vDefs, hDefs )
 
