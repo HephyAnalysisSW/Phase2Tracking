@@ -193,6 +193,7 @@ class VarMaskCombinations:
         if varMask in self.varMaskDefinitions:
             # combination exists (assume that it's also defined in the RDataFrame)
             varMaskName = self.varMaskDefinitions[varMask]
+            print("*** found",varMaskName,"for",varMask,"in local definitions")
             assert varMaskName in rdf.GetDefinedColumnNames()
         else:
             # create name for combination and define it in the RDataFrame

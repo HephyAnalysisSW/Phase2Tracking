@@ -336,7 +336,7 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
     #for mType in range(23,26):
     #    print(histos[mType][0].GetEntries(),histos[mType][1].GetEntries())
     #sys.exit()
-    return histos
+    return rdf,histos
 
 
 
@@ -752,7 +752,13 @@ for cName in allHDefs.canvasNames():
     allHistos[cName] = {}
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
-        allHistos[cName][hName] = createHistoByDef(simHitRDF,allHDefs.byCanvas[cName][hName],extraCuts,varMaskCombs)
+        print("  ",simHitRDF.GetDefinedColumnNames())
+        try:
+            simHitRDF,allHistos[cName][hName] = \
+              createHistoByDef(simHitRDF,allHDefs.byCanvas[cName][hName],extraCuts,varMaskCombs)
+        except:
+            print("Exception for",cName,hName)
+            raise
 #sys.exit()
 
 allObjects = [ ]
