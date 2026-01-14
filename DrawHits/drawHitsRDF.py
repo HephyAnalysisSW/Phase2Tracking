@@ -294,12 +294,17 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             ymin = hDef.getParameter('yMin',mType)
             ymax = hDef.getParameter('yMax',mType)
             v2,v1 = variable.split(":")
-            histos[mType] = [ rdf.Histo2D((hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax), \
-                                          v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2), \
-                                          None, None, None ]
+            cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
+            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+            model = (hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax)
+            histos[mType] = [ rdf.Histo2D(model,varMask1,varMask2), None, None, None ]
             if effCuts!=None:
-                histos[mType][1] = rdf.Histo2D((hName+"_2",hName+"_2",nbx,xmin,xmax,nby,ymin,ymax), \
-                                               v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts)+"]")
+                cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts)
+                rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+                rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+                model = (hName+"_2",hName+"_2",nbx,xmin,xmax,nby,ymin,ymax)
+                histos[mType][1] = rdf.Histo2D(model,varMask1,varMask2)
         elif is3D:
             nby = hDef.getParameter('yNbins',mType)
             ymin = hDef.getParameter('yMin',mType)
@@ -392,19 +397,16 @@ def fillHistoByDef(tree,hDef,extraCuts,histos):
             nby = hDef.getParameter('yNbins',mType)
             ymin = hDef.getParameter('yMin',mType)
             ymax = hDef.getParameter('yMax',mType)
-            histos[mType] = [ ROOT.TH2F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax), None, None, None ]
-            tree.Project(hName+"_1",variable, \
-                          cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
+            #histos[mType] = [ ROOT.TH2F(hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax), None, None, None ]
+            #tree.Project(hName+"_1",variable, \
+            #              cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType)))
             if effCuts!=None:
-                histos[mType][1] = ROOT.TH2F(hName+"_2",hName+"_2",nbx,xmin,xmax,nby,ymin,ymax)
-                #tree.Draw(variable+">>"+hName+"_2("+str(nbx)+","+str(xmin)+","+str(xmax)+","+ \
-                #            str(nby)+","+str(ymin)+","+str(ymax)+")",
+                #histos[mType][1] = ROOT.TH2F(hName+"_2",hName+"_2",nbx,xmin,xmax,nby,ymin,ymax)
+                #tree.Project(hName+"_2",variable, \
                 #            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
-                tree.Project(hName+"_2",variable, \
-                            cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts))
-                histos[mType][1].Divide(histos[mType][0])
+                #histos[mType][1].Divide(histos[mType][0])
                 # always keep final histogram in 4th position
-                histos[mType][3] = histos[mType][1]
+                histos[mType][3] = histos[mType][1].Divide(histos[mType][0].GetValue())
             else:
                 # always keep final histogram in 4th position
                 histos[mType][3] = histos[mType][0]
