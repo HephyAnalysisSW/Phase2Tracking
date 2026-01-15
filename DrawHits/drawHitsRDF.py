@@ -227,7 +227,8 @@ def drawCutPave(cnv,ic,variable,cuts,effcuts=None):
     ROOT.gPad.Update()
     return pave
 
-def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
+#def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
+def createHistoByDef(rdfWrapper,hDef,extraCuts):
     histos = { }
 
     for mType in range(23,26):
@@ -257,24 +258,28 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
         #print("Starting for ",hDef.name,hName,hTitle)
         if is1D and ( not isProfile ):
             cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
-            rdf,varMask = varMaskCombs(rdf,variable,cuts)
+#!#            rdf,varMask = varMaskCombs(rdf,variable,cuts)
+            varMask = rdfWrapper.defineVarMask(variable,cuts)
             model = (hName+"_1",hName+"_1",nbx,xmin,xmax)
-            histos[mType] = [ rdf.Histo1D(model,varMask), None, None, None ]
+            histos[mType] = [ rdfWrapper().Histo1D(model,varMask), None, None, None ]
             if effCuts!=None:
                 cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts)
-                rdf,varMask = varMaskCombs(rdf,variable,cuts)
+#!#                rdf,varMask = varMaskCombs(rdf,variable,cuts)
+                varMask = rdfWrapper.defineVarMask(variable,cuts)
                 model = (hName+"_2",hName+"_2",nbx,xmin,xmax)
-                histos[mType][1] = rdf.Histo1D(model,varMask)
+                histos[mType][1] = rdfWrapper().Histo1D(model,varMask)
             #sys.exit()
         elif isProfile:
             ymin = hDef.getParameter('yMin',mType)
             ymax = hDef.getParameter('yMax',mType)
             v2,v1 = variable.split(":")
             cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
-            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
-            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+#!#            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+            varMask1 = rdfWrapper.defineVarMask(v1,cuts)
+#!#            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+            varMask2 = rdfWrapper.defineVarMask(v2,cuts)
             model = (hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax)
-            histos[mType] = [ rdf.Profile1D(model,varMask1,varMask2), None, None, None ]
+            histos[mType] = [ rdfWrapper().Profile1D(model,varMask1,varMask2), None, None, None ]
             #histos[mType] = [ rdf.Profile1D((hName+"_1",hName+"_1",nbx,xmin,xmax,ymin,ymax,'S'), \
             #                                v1+"["+cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))+"]",v2), \
             #                                None, None, None ]
@@ -284,16 +289,20 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             ymax = hDef.getParameter('yMax',mType)
             v2,v1 = variable.split(":")
             cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
-            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
-            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+#!#            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+            varMask1 = rdfWrapper.defineVarMask(v1,cuts)
+#!#            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+            varMask2 = rdfWrapper.defineVarMask(v2,cuts)
             model = (hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax)
-            histos[mType] = [ rdf.Histo2D(model,varMask1,varMask2), None, None, None ]
+            histos[mType] = [ rdfWrapper().Histo2D(model,varMask1,varMask2), None, None, None ]
             if effCuts!=None:
                 cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType),effCuts)
-                rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
-                rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+#!#                rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+                varMask1 = rdfWrapper.defineVarMask(v1,cuts)
+#!#                rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+                varMask2 = rdfWrapper.defineVarMask(v2,cuts)
                 model = (hName+"_2",hName+"_2",nbx,xmin,xmax,nby,ymin,ymax)
-                histos[mType][1] = rdf.Histo2D(model,varMask1,varMask2)
+                histos[mType][1] = rdfWrapper().Histo2D(model,varMask1,varMask2)
         elif is3D:
             nby = hDef.getParameter('yNbins',mType)
             ymin = hDef.getParameter('yMin',mType)
@@ -303,15 +312,18 @@ def createHistoByDef(rdf,hDef,extraCuts,varMaskCombs):
             zmax = hDef.getParameter('zMax',mType)
             v3,v2,v1 = variable.split(":")
             cuts = cutString(extraCuts,hDef.getParameter('baseCuts',mType),"moduleType=="+str(mType))
-            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
-            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
-            rdf,varMask3 = varMaskCombs(rdf,v3,cuts)
+#!#            rdf,varMask1 = varMaskCombs(rdf,v1,cuts)
+            varMask1 = rdfWrapper.defineVarMask(v1,cuts)
+#!#            rdf,varMask2 = varMaskCombs(rdf,v2,cuts)
+            varMask2 = rdfWrapper.defineVarMask(v2,cuts)
+#!#            rdf,varMask3 = varMaskCombs(rdf,v3,cuts)
+            varMask3 = rdfWrapper.defineVarMask(v3,cuts)
             model = (hName+"_1",hName+"_1",nbx,xmin,xmax,nby,ymin,ymax,nbz,zmin,zmax)
-            histos[mType] = [ rdf.Histo3D(model,varMask1,varMask2,varMask3), None, None, None ]
+            histos[mType] = [ rdfWrapper().Histo3D(model,varMask1,varMask2,varMask3), None, None, None ]
             assert effCuts==None
         #print("Ending for ",hDef.name,hName,hTitle)
 
-    return rdf,histos
+    return histos
 
 
 
@@ -633,7 +645,8 @@ for k,v in allVDefs.items():
 canvases = [ ]
 histos = { }
 paves = [ ]
-varMaskCombs = VarMaskCombinations()
+#varMaskCombs = VarMaskCombinations()
+simHitRDFW = RDFWrapper(simHitRDF)
 
 allHistos = { }
 for cName in allHDefs.canvasNames():
@@ -642,11 +655,15 @@ for cName in allHDefs.canvasNames():
         print("Processing histogram",hName,"in canvas",cName)
         print("  ",simHitRDF.GetDefinedColumnNames())
         try:
-            simHitRDF,allHistos[cName][hName] = \
-              createHistoByDef(simHitRDF,allHDefs.byCanvas[cName][hName],extraCuts,varMaskCombs)
+            allHistos[cName][hName] = \
+              createHistoByDef(simHitRDFW,allHDefs.byCanvas[cName][hName],extraCuts)
+#            simHitRDF,allHistos[cName][hName] = \
+#              createHistoByDef(simHitRDF,allHDefs.byCanvas[cName][hName],extraCuts,varMaskCombs)
         except:
             print("Exception for",cName,hName)
             raise
+# keep reference to RDF with all definitions
+simHitRDF = simHitRDFW()
 
 allObjects = [ ]
 for cName in allHDefs.canvasNames():

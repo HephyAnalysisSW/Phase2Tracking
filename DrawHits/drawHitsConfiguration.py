@@ -205,6 +205,48 @@ class VarMaskCombinations:
             #print("+++")
         return rdf,varMaskName
         
+class RDFWrapper:
+    ''' Wrapper of RDataFrame with possibility to define variable+mask combinations
+    '''
+    def __init__(self,rdf):
+        #
+        # variable+mask name indexed by variable+selection string
+        #
+        self.rdf = rdf
+        self.varMaskDefinitions = { }
+
+    def __call__(self):
+        ''' Easy access to RDataFrame
+        '''
+        return self.rdf
+    
+    def defineVarMask(self,varName,selection):
+        ''' Return the name of a variable+mask combination. Define if necessary.
+            Arguments:
+              rdf ........ RDataFrame to be used for definition
+              varName .... name of the variable
+              selection .. selection string to be used as mask
+        '''
+        #
+        # use variable name and normalized selection string (remove spaces)
+        #
+        selNorm = selection.replace(" ","")
+        varMask = "(" + varName + ")["+selNorm+"]"
+        if varMask in self.varMaskDefinitions:
+            # combination exists (assume that it's also defined in the RDataFrame)
+            varMaskName = self.varMaskDefinitions[varMask]
+            assert varMaskName in self.rdf.GetDefinedColumnNames()
+        else:
+            # create name for combination and define it in the RDataFrame
+            n = len(self.varMaskDefinitions)
+            varMaskName = "varMask{:03d}".format(n)
+            self.varMaskDefinitions[varMask] = varMaskName
+            self.rdf = self.rdf.Define(varMaskName,varMask)
+            #print("+++ defined new var + mask combinations:",varMaskName,varMask)
+            #print(rdf.GetDefinedColumnNames())
+            #print("+++")
+        return varMaskName
+        
         
 def loadConfiguration(configName,selectedNames=[],vetoedNames=[]):
     ''' Load variable and histogram definitions from a configuration file. The configuration file
