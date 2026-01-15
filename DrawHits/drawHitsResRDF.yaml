@@ -1,0 +1,150 @@
+#
+# definitions of new variables
+#
+variables:
+   pathX: 'path.fCoordinates.fX'
+   pathY: 'path.fCoordinates.fY'
+   pathZ: 'path.fCoordinates.fZ'
+   dxdz: 'pathX/pathZ'
+   alpha: 'atan2(abs(pathX),abs(pathZ))/3.1415*180'
+   localPosX: 'localPos.fCoordinates.fX'
+   localPosY: 'localPos.fCoordinates.fY'
+   rhLocalPosX: 'rhLocalPos.fCoordinates.fX'
+   rhLocalPosY: 'rhLocalPos.fCoordinates.fY'
+   rhLocalErrX: 'rhLocalErr.fCoordinates.fX'
+   rhLocalErrY: 'rhLocalErr.fCoordinates.fY'
+   globRho2: 'globalDir.fCoordinates.fX*globalDir.fCoordinates.fX+globalDir.fCoordinates.fY*globalDir.fCoordinates.fY'
+   globR2: 'globRho2+globalDir.fCoordinates.fZ*globalDir.fCoordinates.fZ'
+   globPt: 'pabs*sqrt(sqrt(globRho2/globR2))'
+   detNormalT: 'detNormal.fCoordinates.fX*detNormal.fCoordinates.fX+detNormal.fCoordinates.fY*detNormal.fCoordinates.fY'
+#
+#
+#
+histograms:
+
+  pullX:
+     histogramTitle: 'pulls (x)'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErrX'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'pull local x'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     fit: 'gaus'
+     logY: true
+  pullXW1:
+     histogramTitle: 'pulls (x)'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErrX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: 'pull local x'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     fit: 'gaus'
+     logY: true
+  pullXW2:
+     histogramTitle: 'pulls (x)'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErrX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: 'pull local x'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  resX:
+     histogramTitle: 'residuals (x)'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  resX1:
+     histogramTitle: 'residuals (x) - cluster size 1'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  resX2:
+     histogramTitle: 'residuals (x) - cluster size 2'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 800
+     xMax: 0.040
+     xMin: -0.040
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  resX3P:
+     histogramTitle: 'residuals (x) - cluster size >2'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize>2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     logY: true
+#
+#
+#
+  res2DX1:
+     histogramTitle: 'track dx/dz vs. residuals (x) - cluster size 1'
+     variable: 'pathX/pathZ:localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     yNbins: 21
+     yMin: -1.05
+     yMax: 1.05
+     logZ: true
+#
+#
+#
+  res2DX2:
+     histogramTitle: 'track dz/dx vs. residuals (x) - cluster size 2'
+     variable: 'pathX/pathZ:localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 800
+     xMax: 0.040
+     xMin: -0.040
+     yNbins: 21
+     yMin: -1.05
+     yMax: 1.05
+     logZ: true
+#
+#
+#
+  resY:
+     histogramTitle: 'pulls (y)'
+     variable: '(localPosY-rhLocalPosY)/rhLocalErrY'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'pull local y'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     logY: true
+#
+#
+#

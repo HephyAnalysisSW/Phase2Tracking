@@ -653,7 +653,6 @@ for cName in allHDefs.canvasNames():
     allHistos[cName] = {}
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
-        print("  ",simHitRDF.GetDefinedColumnNames())
         try:
             allHistos[cName][hName] = \
               createHistoByDef(simHitRDFW,allHDefs.byCanvas[cName][hName],extraCuts)
@@ -671,7 +670,7 @@ for cName in allHDefs.canvasNames():
     cHistos = { }
     for hName in allHDefs.byCanvas[cName]:
         print("Processing histogram",hName,"in canvas",cName)
-        print(allHistos[cName][hName])
+        #print(allHistos[cName][hName])
         fillHistoByDef(simHitTree,allHDefs.byCanvas[cName][hName],extraCuts,allHistos[cName][hName])
         allObjects.append(drawHistoByDef(allHistos[cName][hName],allHDefs.byCanvas[cName][hName], \
                                              logY=args.logY,logZ=args.logZ,same=same))
