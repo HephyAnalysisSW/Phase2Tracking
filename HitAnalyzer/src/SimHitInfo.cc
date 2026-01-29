@@ -258,6 +258,24 @@ void SimHitInfo::fillSimHitInfo(const PSimHit& simHit) {
     // find all rechits with contributions from the SimTrack related to simHit
     //
     RecHitDistancePairs matchedRecHits = matchRecHitOnDet(&simHit,detId,ivrh->second);
+    // ////
+    // if ( matchedRecHits.size()>50 ) {
+    //   std::cout << "SimHit with " << matchedRecHits.size() << " matched hits" << std::endl;
+    //   std::cout << "   " << "at " << &simHit << " detid " << simHit.detUnitId() << " loc pos "
+    // 	   << simHit.localPosition().x() << " / " << simHit.localPosition().y() << std::endl;
+    //   std::cout << "   " << "entry " << simHit.entryPoint().x() << " / " << simHit.entryPoint().y()
+    // 		<< " ; exit "  << simHit.exitPoint().x() << " / " << simHit.exitPoint().y() << std::endl;
+    //   std::cout << "   " << "trackId " << simHit.trackId() << " ; pType "  << simHit.particleType()
+    // 		<< " ; pabs " << simHit.pabs() << std::endl;
+    //   for ( SimHitInfo::RecHitDistancePairs::const_iterator irrr=matchedRecHits.begin();
+    // 	    irrr!=matchedRecHits.end(); ++irrr ) {
+    // 	std::cout << "  RecHit on detid " << irrr->first->geographicalId() << " loc pos "
+    // 	   << irrr->first->localPosition().x() << " / " << irrr->first->localPosition().y() << std::endl;
+    // 	const Phase2TrackerCluster1D& cluster = *(irrr->first->cluster());
+    // 	std::cout << "     first row / column " << cluster.firstRow() << " / " << cluster.column() << std::endl;
+    //   }
+    // }
+    // ////
     // store best match (if any)
     nMatched = matchedRecHits.size();
     if ( nMatched>0 )  rechit = matchedRecHits[0].first;

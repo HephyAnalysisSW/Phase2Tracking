@@ -59,6 +59,7 @@ public:
     std::vector<unsigned short> moduleType;
     std::vector<ROOT::Math::XYZVectorF> detNormal;
     std::vector<unsigned int> trackId;
+    std::vector<unsigned int> nSimTracks;
   };
 
   RecHitData recHitData;

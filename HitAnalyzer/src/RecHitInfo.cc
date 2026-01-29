@@ -41,7 +41,8 @@ void RecHitInfo::setBranches(TTree& tree) {
   tree.Branch("layer",   &recHitData.layer);
   tree.Branch("moduleType",      &recHitData.moduleType);
   tree.Branch("detNormal",       &recHitData.detNormal);
-  tree.Branch("trackId",	&recHitData.trackId);  
+  tree.Branch("trackId",	&recHitData.trackId);
+  tree.Branch("nSimTracks",	&recHitData.nSimTracks);
 };
 
 std::vector<unsigned int> RecHitInfo::getSimTrackId(
@@ -255,13 +256,14 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
     recHitData.Hit_cluster_closestSimHit_local_z.push_back(simhit->localPosition().z());
     fillSimHitInfo(*simhit);
   }
+  recHitData.nSimTracks.push_back(clusterSimTrackIds.size());
   recHitData.Hit_det_rawid.push_back(rawid);
   recHitData.Hit_cluster_firstStrip.push_back(clustIt->firstStrip());
   recHitData.Hit_cluster_firstRow.push_back(clustIt->firstRow());
   recHitData.Hit_cluster_column.push_back(clustIt->column());
   recHitData.Hit_cluster_edge.push_back(clustIt->edge());
   recHitData.Hit_cluster_threshold.push_back(clustIt->threshold());
-
+  
 };
   
 void RecHitInfo::clear() {
@@ -301,4 +303,5 @@ void RecHitInfo::clear() {
   recHitData.moduleType.clear();
   recHitData.detNormal.clear();
   recHitData.trackId.clear();
+  recHitData.nSimTracks.clear();
 };
