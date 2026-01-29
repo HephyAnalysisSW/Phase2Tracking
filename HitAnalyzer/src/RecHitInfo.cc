@@ -125,7 +125,7 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
   const Phase2TrackerCluster1D* clustIt = &*recHit.cluster();
 
   // Get all the simTracks that form the cluster
-  std::vector<unsigned int> clusterSimTrackIds;
+  std::set<unsigned int> clusterSimTrackIds;
   for (unsigned int i(0); i < clustIt->size(); ++i) {
     unsigned int channel(Phase2TrackerDigi::pixelToChannel(clustIt->firstRow() + i, clustIt->column()));
     std::vector<unsigned int> simTrackIds_unselected(getSimTrackId(*pixelSimLinks, detId, channel));
@@ -135,18 +135,9 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
       if (istfind != simTracks.end())
 	simTrackIds.push_back(istId);
     }
-    for (unsigned int i = 0; i < simTrackIds.size(); ++i) {
-      bool add = true;
-      for (unsigned int j = 0; j < clusterSimTrackIds.size(); ++j) {
-	// only save simtrackids that are not present yet
-	if (simTrackIds.at(i) == clusterSimTrackIds.at(j))
-	  add = false;
-      }
-      if (add)
-	clusterSimTrackIds.push_back(simTrackIds.at(i));
-    }
+    clusterSimTrackIds.insert(simTrackIds.begin(),simTrackIds.end());
   }
-  
+
   // find the closest simhit
   // this is needed because otherwise you get cases with simhits and clusters being swapped
   // when there are more than 1 cluster with common simtrackids
@@ -159,9 +150,9 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
 	 ++simhitIt) {
       // check SimHit detId is the same with the RecHit
       if (rawid == simhitIt->detUnitId()) {
-	auto it = std::lower_bound(clusterSimTrackIds.begin(), clusterSimTrackIds.end(), simhitIt->trackId());
-	// check SimHit track id is included in the cluster
-	if (it != clusterSimTrackIds.end() && *it == simhitIt->trackId()) {
+	// auto it = std::lower_bound(clusterSimTrackIds.begin(), clusterSimTrackIds.end(), simhitIt->trackId());
+	// // check SimHit track id is included in the cluster
+	if ( clusterSimTrackIds.find(simhitIt->trackId()) != clusterSimTrackIds.end() ) {
 	  trackSimHits.push_back(&*simhitIt);
 	  if (!simhit || fabs(simhitIt->localPosition().x() - localPosClu.x()) < minx) {
 	    minx = fabs(simhitIt->localPosition().x() - localPosClu.x());
