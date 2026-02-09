@@ -137,7 +137,21 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
     }
     clusterSimTrackIds.insert(simTrackIds.begin(),simTrackIds.end());
   }
-
+  // debug
+  if ( clusterSimTrackIds.size()==0 ) {
+    std::cout << "** RecHit without SimTrackIds on detId " << rawid << " layer " << layer
+	      << " module type " << (unsigned int)tkGeom->getDetectorType(detId) << std::endl;
+    for (unsigned int i(0); i < clustIt->size(); ++i) {
+      unsigned int channel(Phase2TrackerDigi::pixelToChannel(clustIt->firstRow() + i, clustIt->column()));
+      std::cout << " channel " << clustIt->firstRow()+i << " " << clustIt->column() << std::endl;
+      std::vector<unsigned int> simTrackIds_unselected(getSimTrackId(*pixelSimLinks, detId, channel));
+      std::cout << "  simTrackIds";
+      for ( auto istid=simTrackIds_unselected.begin();
+	    istid!=simTrackIds_unselected.end(); ++istid )  std::cout << " " << *istid;
+      std::cout << std::endl;
+    }
+  }
+  // debug
   // find the closest simhit
   // this is needed because otherwise you get cases with simhits and clusters being swapped
   // when there are more than 1 cluster with common simtrackids
