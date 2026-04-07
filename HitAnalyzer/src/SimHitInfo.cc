@@ -148,16 +148,8 @@ SimHitInfo::matchRecHitOnDet(const PSimHit* simHit, const DetId& detId,
       // find SimTracks contributing to the channel
       unsigned int channel(Phase2TrackerDigi::pixelToChannel(cluster.firstRow() + i, cluster.column()));
       std::vector<unsigned int> simTrackIds = getSimTrackId(detId,channel);
-      // std::cout << "SimHitInfo          " << simTrackIds.size() << " simTracks" << std::endl;
-      for ( std::vector<unsigned int>::const_iterator ist=simTrackIds.begin(); ist!=simTrackIds.end(); ++ist ) {
-	// std::cout << "SimHitInfo        track id " << *ist << " (simhit track id " << (*simHit).trackId() << " ) "
-	// 	  << std::endl;
-	// compare to track id of the SimHit
-	if ( (*ist)==(*simHit).trackId() ) {
-	  matched = true;
-	  break;
-	}
-      }
+      // // std::cout << "SimHitInfo          " << simTrackIds.size() << " simTracks" << std::endl;
+      matched = std::find(simTrackIds.begin(),simTrackIds.end(),(*simHit).trackId())!=simTrackIds.end();
       // if match was found: consider RecHit
       // std::cout << "SimHitInfo        matched : " << matched << std::endl;
       if ( matched ) break;
@@ -258,6 +250,24 @@ void SimHitInfo::fillSimHitInfo(const PSimHit& simHit) {
     // find all rechits with contributions from the SimTrack related to simHit
     //
     RecHitDistancePairs matchedRecHits = matchRecHitOnDet(&simHit,detId,ivrh->second);
+    // ////
+    // if ( matchedRecHits.size()>50 ) {
+    //   std::cout << "SimHit with " << matchedRecHits.size() << " matched hits" << std::endl;
+    //   std::cout << "   " << "at " << &simHit << " detid " << simHit.detUnitId() << " loc pos "
+    // 	   << simHit.localPosition().x() << " / " << simHit.localPosition().y() << std::endl;
+    //   std::cout << "   " << "entry " << simHit.entryPoint().x() << " / " << simHit.entryPoint().y()
+    // 		<< " ; exit "  << simHit.exitPoint().x() << " / " << simHit.exitPoint().y() << std::endl;
+    //   std::cout << "   " << "trackId " << simHit.trackId() << " ; pType "  << simHit.particleType()
+    // 		<< " ; pabs " << simHit.pabs() << std::endl;
+    //   for ( SimHitInfo::RecHitDistancePairs::const_iterator irrr=matchedRecHits.begin();
+    // 	    irrr!=matchedRecHits.end(); ++irrr ) {
+    // 	std::cout << "  RecHit on detid " << irrr->first->geographicalId() << " loc pos "
+    // 	   << irrr->first->localPosition().x() << " / " << irrr->first->localPosition().y() << std::endl;
+    // 	const Phase2TrackerCluster1D& cluster = *(irrr->first->cluster());
+    // 	std::cout << "     first row / column " << cluster.firstRow() << " / " << cluster.column() << std::endl;
+    //   }
+    // }
+    // ////
     // store best match (if any)
     nMatched = matchedRecHits.size();
     if ( nMatched>0 )  rechit = matchedRecHits[0].first;

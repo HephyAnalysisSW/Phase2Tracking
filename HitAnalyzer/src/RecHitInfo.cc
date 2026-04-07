@@ -41,7 +41,8 @@ void RecHitInfo::setBranches(TTree& tree) {
   tree.Branch("layer",   &recHitData.layer);
   tree.Branch("moduleType",      &recHitData.moduleType);
   tree.Branch("detNormal",       &recHitData.detNormal);
-  tree.Branch("trackId",	&recHitData.trackId);  
+  tree.Branch("trackId",	&recHitData.trackId);
+  tree.Branch("nSimTracks",	&recHitData.nSimTracks);
 };
 
 std::vector<unsigned int> RecHitInfo::getSimTrackId(
@@ -124,7 +125,7 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
   const Phase2TrackerCluster1D* clustIt = &*recHit.cluster();
 
   // Get all the simTracks that form the cluster
-  std::vector<unsigned int> clusterSimTrackIds;
+  std::set<unsigned int> clusterSimTrackIds;
   for (unsigned int i(0); i < clustIt->size(); ++i) {
     unsigned int channel(Phase2TrackerDigi::pixelToChannel(clustIt->firstRow() + i, clustIt->column()));
     std::vector<unsigned int> simTrackIds_unselected(getSimTrackId(*pixelSimLinks, detId, channel));
@@ -134,18 +135,23 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
       if (istfind != simTracks.end())
 	simTrackIds.push_back(istId);
     }
-    for (unsigned int i = 0; i < simTrackIds.size(); ++i) {
-      bool add = true;
-      for (unsigned int j = 0; j < clusterSimTrackIds.size(); ++j) {
-	// only save simtrackids that are not present yet
-	if (simTrackIds.at(i) == clusterSimTrackIds.at(j))
-	  add = false;
-      }
-      if (add)
-	clusterSimTrackIds.push_back(simTrackIds.at(i));
+    clusterSimTrackIds.insert(simTrackIds.begin(),simTrackIds.end());
+  }
+  // debug
+  if ( clusterSimTrackIds.size()==0 ) {
+    std::cout << "** RecHit without SimTrackIds on detId " << rawid << " layer " << layer
+	      << " module type " << (unsigned int)tkGeom->getDetectorType(detId) << std::endl;
+    for (unsigned int i(0); i < clustIt->size(); ++i) {
+      unsigned int channel(Phase2TrackerDigi::pixelToChannel(clustIt->firstRow() + i, clustIt->column()));
+      std::cout << " channel " << clustIt->firstRow()+i << " " << clustIt->column() << std::endl;
+      std::vector<unsigned int> simTrackIds_unselected(getSimTrackId(*pixelSimLinks, detId, channel));
+      std::cout << "  simTrackIds";
+      for ( auto istid=simTrackIds_unselected.begin();
+	    istid!=simTrackIds_unselected.end(); ++istid )  std::cout << " " << *istid;
+      std::cout << std::endl;
     }
   }
-  
+  // debug
   // find the closest simhit
   // this is needed because otherwise you get cases with simhits and clusters being swapped
   // when there are more than 1 cluster with common simtrackids
@@ -158,9 +164,9 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
 	 ++simhitIt) {
       // check SimHit detId is the same with the RecHit
       if (rawid == simhitIt->detUnitId()) {
-	auto it = std::lower_bound(clusterSimTrackIds.begin(), clusterSimTrackIds.end(), simhitIt->trackId());
-	// check SimHit track id is included in the cluster
-	if (it != clusterSimTrackIds.end() && *it == simhitIt->trackId()) {
+	// auto it = std::lower_bound(clusterSimTrackIds.begin(), clusterSimTrackIds.end(), simhitIt->trackId());
+	// // check SimHit track id is included in the cluster
+	if ( clusterSimTrackIds.find(simhitIt->trackId()) != clusterSimTrackIds.end() ) {
 	  trackSimHits.push_back(&*simhitIt);
 	  if (!simhit || fabs(simhitIt->localPosition().x() - localPosClu.x()) < minx) {
 	    minx = fabs(simhitIt->localPosition().x() - localPosClu.x());
@@ -255,13 +261,14 @@ void RecHitInfo::fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned in
     recHitData.Hit_cluster_closestSimHit_local_z.push_back(simhit->localPosition().z());
     fillSimHitInfo(*simhit);
   }
+  recHitData.nSimTracks.push_back(clusterSimTrackIds.size());
   recHitData.Hit_det_rawid.push_back(rawid);
   recHitData.Hit_cluster_firstStrip.push_back(clustIt->firstStrip());
   recHitData.Hit_cluster_firstRow.push_back(clustIt->firstRow());
   recHitData.Hit_cluster_column.push_back(clustIt->column());
   recHitData.Hit_cluster_edge.push_back(clustIt->edge());
   recHitData.Hit_cluster_threshold.push_back(clustIt->threshold());
-
+  
 };
   
 void RecHitInfo::clear() {
@@ -301,4 +308,5 @@ void RecHitInfo::clear() {
   recHitData.moduleType.clear();
   recHitData.detNormal.clear();
   recHitData.trackId.clear();
+  recHitData.nSimTracks.clear();
 };

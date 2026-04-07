@@ -23,13 +23,18 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input file
 process.source = cms.Source('PoolSource',
-    #fileNames = cms.untracked.vstring('file:/afs/cern.ch/work/l/lian/public/Phase2Tracker/CMSSW_15_0_0_pre3/src/29617.0_SingleMuPt1Extended+Run4D110/step3.root')
-    fileNames = cms.untracked.vstring('file:/eos/user/a/adamwo/CMS/Phase2DPG/Data/0b0d313e-56e1-4e64-aa58-8a2e61767bf5.root')
+    fileNames = cms.untracked.vstring( \
+        '/store/relval/CMSSW_15_0_0/RelValSingleMuPt10/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/0b0d313e-56e1-4e64-aa58-8a2e61767bf5.root', \
+        '/store/relval/CMSSW_15_0_0/RelValSingleMuPt10/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/66c7ce91-878a-449b-b0fb-1cb8d3084116.root', \
+        '/store/relval/CMSSW_15_0_0/RelValSingleMuPt10/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/6cd776e0-dd34-48c4-81cc-844435564ea5.root', \
+        '/store/relval/CMSSW_15_0_0/RelValSingleMuPt10/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/94a5b755-f778-4861-a83d-94eb46c18acb.root', \
+        '/store/relval/CMSSW_15_0_0/RelValSingleMuPt10/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/a146954f-f6be-46bc-95e8-dd1016306930.root', \
+        '/store/relval/CMSSW_15_0_0/RelValSingleMuPt10/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/f459a343-5615-46f5-9ebc-f07e87c3db8e.root')
 )
 
 # Output
 process.TFileService = cms.Service('TFileService',
-    fileName = cms.string('file:rechits_tree.root')
+    fileName = cms.string('file:rechits_tree_mu10.root')
 )
 
 process.load('RecoLocalTracker.SiPhase2Clusterizer.phase2TrackerClusterizer_cfi')
