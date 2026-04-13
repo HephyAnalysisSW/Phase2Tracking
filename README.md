@@ -6,8 +6,8 @@ This repository produces the ntuples for tracker rechits.
 This has to be done only once.
 ```
 cmssw-el8 # activate the container for the CMSSW
-cmsrel CMSSW_15_0_0_pre3
-cd CMSSW_15_0_0_pre3/src
+cmsrel CMSSW_15_1_1
+cd CMSSW_15_1_1/src
 cmsenv
 git clone git@github.com:HephyAnalysisSW/Phase2Tracking.git
 scram b -j 8 # compile the code
@@ -18,7 +18,7 @@ scram b -j 8 # compile the code
 To do this, first login to CLIP/lxplus/etc. and set up the environment:
 ```
 cmssw-el8
-cd /path/to/CMSSW_15_0_0_pre3/src
+cd /path/to/CMSSW_15_1_1/src
 cmsenv
 ```
 If you are using files from `eos`, make sure you have a valid grid certificate and do:

@@ -17,7 +17,7 @@ This script intends to make histograms in a flexible way based on RDataFrame.
 - Setup the env:
 ```
 cmssw-el8 #the container is needed on CLIP
-cd CMSSW_15_0_0_pre3/src
+cd CMSSW_15_1_1/src
 cmsenv
 ```
 - To run locally:

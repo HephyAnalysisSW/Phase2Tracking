@@ -22,36 +22,12 @@ process.maxEvents = cms.untracked.PSet(
 )
 
 # Input file
-# dataset: /RelValTTbar_14TeV/CMSSW_15_0_0-141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/GEN-SIM-RECO
+# dataset: /RelValTTbar_14TeV/CMSSW_15_1_0-150X_mcRun4_realistic_v1_STD_RegeneratedGS_Run4D110_noPU-v1/GEN-SIM-RECO
 process.source = cms.Source('PoolSource',
 
-    #fileNames = cms.untracked.vstring('file:/afs/cern.ch/work/l/lian/public/Phase2Tracker/CMSSW_15_0_0_pre3/src/29617.0_SingleMuPt1Extended+Run4D110/step3.root')
-    #fileNames = cms.untracked.vstring('file:/eos/user/a/adamwo/CMS/Phase2DPG/Data/0b0d313e-56e1-4e64-aa58-8a2e61767bf5.root')
     fileNames = cms.untracked.vstring(
-        '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/061404ed-7c65-4f6e-88e9-b45a468f1cbe.root', \
-        '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/162e0007-7588-46d8-9c93-a2b4b243885e.root')
-    #fileNames = cms.untracked.vstring(
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/061404ed-7c65-4f6e-88e9-b45a468f1cbe.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/162e0007-7588-46d8-9c93-a2b4b243885e.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/1bb480aa-0bad-439e-a6a4-a75780d0be9c.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/3db44076-4bb3-415b-b3a9-feb742460636.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/41d76683-9927-42e5-8c22-dfa056c56294.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/4bfe3713-82f0-43ac-8bd6-b16afd9d93e5.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/4c1b3277-7e2b-48c1-83b2-36ca12ea1a81.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/739566a2-723b-4c45-a40b-9d7a0f9e5434.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/75a2a485-cea5-4b7c-ab46-f08964fd9ac0.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/8490e1fb-3678-42b9-8010-d82ee3ec2a88.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/99ee730a-ec1c-4c3e-a345-71c82d1f2f41.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/a448fde4-b759-45ad-8c7e-45e1ec9d5f6e.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/b3c656c1-6e89-4491-b70d-2003eeb7fa72.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/c0f20d8b-f32b-40b5-bc5f-86fe17e90525.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/d7b6f571-25f9-44c4-812b-d040281b9d6a.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/db97a912-0690-46a1-80e7-ea6759b771ef.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/f542885d-c2a0-4a1f-9189-30a3995bcd61.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/fb22dfc2-87a5-40d5-b8c3-feb1e6df4047.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/fb6db36e-f813-4f25-92ea-afd7ed1ac961.root', \
-    #    '/store/relval/CMSSW_15_0_0/RelValTTbar_14TeV/GEN-SIM-RECO/141X_mcRun4_realistic_v3_STD_RegeneratedGS_Run4D110_noPU-v2/2580000/fc0a3df9-3f08-4355-9a91-12c1b3bd74ef.root'
-    #)
+        '/store/relval/CMSSW_15_1_0/RelValTTbar_14TeV/GEN-SIM-RECO/150X_mcRun4_realistic_v1_STD_RegeneratedGS_Run4D110_noPU-v1/2590000/002a6949-6471-46fd-8c44-1f09e7717c8f.root', \
+        '/store/relval/CMSSW_15_1_0/RelValTTbar_14TeV/GEN-SIM-RECO/150X_mcRun4_realistic_v1_STD_RegeneratedGS_Run4D110_noPU-v1/2590000/0e60c3b1-0c21-41d2-94de-435382ae2b44.root')
 )
 
 # Output
