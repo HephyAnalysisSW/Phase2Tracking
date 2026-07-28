@@ -11,7 +11,8 @@ ROOT.TH1.SetDefaultSumw2(True)
 ROOT.gStyle.SetOptStat(0)
 
 class Plotter:
-  def __init__(self,name,treeName,outputDir="./",input_filelist=None,config="",isData=False,postfix=""):
+  def __init__(self,name,treeName,outputDir="./",input_filelist=None,config="",isData=False,postfix="", \
+                 macros=[]):
     self.name = name 
     self.treeName = treeName
     self.outputDir = outputDir
@@ -21,6 +22,8 @@ class Plotter:
     with open(config, "r") as f_cfg:
       cfg = yaml.load(f_cfg, Loader=yaml.FullLoader)
     self.cfg = cfg
+    for m in macros:
+      ROOT.gROOT.ProcessLine(".L "+m+"+")
 
   def getFileList(self):
     self.filelist = []
@@ -35,11 +38,13 @@ class Plotter:
       print("No files provided as input!")
 
   def AddVars(self,d):
+      print(type(self.cfg))
       vars_to_define = ['new_variables']
       for v in vars_to_define:
         if (not v in self.cfg) or (self.cfg[v] is None):
           continue 
         if self.cfg[v] is not None:
+          print(v,type(self.cfg[v]))
           for newvar in self.cfg[v]:
             if isinstance(self.cfg[v][newvar],list):
               formatstr = [self.cfg[self.cfg[v][newvar][i]] for i in range(1,len(self.cfg[v][newvar]))]
@@ -47,6 +52,7 @@ class Plotter:
             elif isinstance(self.cfg[v][newvar],str):
               var_define = self.cfg[v][newvar]
             d = d.Define(newvar,var_define)
+            print("*** Define AddVars",newvar,var_define)
       return d
   
   def AddVarsWithSelection(self,d):
@@ -59,8 +65,10 @@ class Plotter:
         for v in variables:
           if selections[sel]:
             d = d.Define(v+sel,"{0}[{1}]".format(v,selections[sel]))
+            print("*** Define AddVarsWithSelection1",sel,v+sel,"{0}[{1}]".format(v,selections[sel]))
           else:
             d = d.Define(v+sel,"{0}".format(v))
+            print("*** Define AddVarsWithSelection",sel,v+sel,"{0}".format(v))
         if ('nm1' in self.cfg['objects'][obj]) and (self.cfg['objects'][obj]['nm1']):
           nm1s = self.cfg['objects'][obj]['nm1']
           cutstr_objsel = ""
@@ -75,16 +83,19 @@ class Plotter:
             cutstr = "&&".join(cutstrs)
             cutstr = cutstr_objsel + "({})".format(cutstr)
             d = d.Define(nm1s[i][0]+sel+'_nm1',"{0}[{1}]".format(nm1s[i][0],cutstr))
+            print("*** Define AddVarsWithSelection2",nm1s[i][0]+sel+'_nm1',"{0}[{1}]".format(nm1s[i][0],cutstr))
             #print("define {}: {}".format(nm1s[i][0]+sel+'_nm1',"{0}[{1}]".format(nm1s[i][0],cutstr)))
 
     return d
   
   def FilterEvents(self,d):
     d_filter = d.Filter(self.presel)
+    print("*** Filter",self.presel)
     return d_filter
 
   def AddWeights(self,d,weight):
     d = d.Define("evt_weight","{0}".format(weight))
+    print("*** Define AddWeights","evt_weight","{0}".format(weight))
     return d
   
   def getRDF(self):
@@ -99,6 +110,7 @@ class Plotter:
     d = self.AddVarsWithSelection(d)
     if self.cfg['presel'] is not None:
       d = d.Filter(self.cfg['presel'])
+      print("*** Filter getRDF",self.cfg['presel'])
     xsec_weights = 1
     d = self.AddWeights(d,xsec_weights)
     return d,xsec_weights
@@ -111,14 +123,18 @@ class Plotter:
       plots_2d = []
     if plots_nm1 is None:
       plots_nm1 = []
-
+#!#
+    self.isData = True
+#!#
     for plt in plots_1d:
       if not plt in self.cfg['plot_setting']:
         print("{} not registered in plot setting!".format(plt))
       if self.isData:
         h = d.Histo1D(tuple(self.cfg['plot_setting'][plt]),plt+varlabel)
+        print("*** Histo1D getplots",plt,self.isData,tuple(self.cfg['plot_setting'][plt]),plt+varlabel)
       else:
         h = d.Histo1D(tuple(self.cfg['plot_setting'][plt]),plt+varlabel,weight)
+        print("*** Histo1D getplots",plt,self.isData,tuple(self.cfg['plot_setting'][plt]),plt+varlabel,weight)
       hs.append(h)
 
     for plt in plots_nm1:
@@ -179,6 +195,7 @@ class Plotter:
         d_sr = d
         if self.cfg['regions'][sr] is not None:
           d_sr = d_sr.Filter(self.cfg['regions'][sr])
+          print("*** Filter makeHistFiles1",sr,self.cfg['regions'][sr])
 
         newd_evt = fout.mkdir("{}_evt".format(sr))
         hs = self.getplots(d_sr,weight="evt_weight",plots_1d=self.cfg['event_variables'],plots_2d=self.cfg['event_2d_plots'],plots_nm1=self.cfg.get('event_nm1'),varlabel="")

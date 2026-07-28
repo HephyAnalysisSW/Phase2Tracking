@@ -1,0 +1,378 @@
+#
+# definitions of new variables
+#
+variables:
+   pathX: 'path.fCoordinates.fX'
+   pathY: 'path.fCoordinates.fY'
+   pathZ: 'path.fCoordinates.fZ'
+   dxdz: 'pathX/pathZ'
+   alpha: 'atan2(abs(pathX),abs(pathZ))/3.1415*180'
+   localPosX: 'localPos.fCoordinates.fX'
+   localPosY: 'localPos.fCoordinates.fY'
+   rhLocalPosX: 'rhLocalPos.fCoordinates.fX'
+   rhLocalPosY: 'rhLocalPos.fCoordinates.fY'
+   rhLocalErrX: 'rhLocalErr.fCoordinates.fX'
+   rhLocalErrY: 'rhLocalErr.fCoordinates.fY'
+   localPosXMod90: 'floatMod(10000*localPos.fCoordinates.fX,90)'
+   localPosXMod100: 'floatMod(10000*localPos.fCoordinates.fX,100)'
+   localPosYMod500: 'floatMod(10*localPosY,50)/10.'
+   localPosYMod250: 'floatMod(10*localPosY,25)/10.' 
+   localPosYMod15: 'floatMod(100*localPosY,15)/10'
+   globRho2: 'globalDir.fCoordinates.fX*globalDir.fCoordinates.fX+globalDir.fCoordinates.fY*globalDir.fCoordinates.fY'
+   globR2: 'globRho2+globalDir.fCoordinates.fZ*globalDir.fCoordinates.fZ'
+   globPt: 'pabs*sqrt(globRho2/globR2)'
+   detNormalT: 'detNormal.fCoordinates.fX*detNormal.fCoordinates.fX+detNormal.fCoordinates.fY*detNormal.fCoordinates.fY'
+#
+#
+#
+histograms:
+
+  pullX:
+     histogramTitle: 'pulls (x)'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErrX'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'pull local x'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     fit: 'gaus'
+     logY: true
+  pullXW1:
+     histogramTitle: 'pulls (x)'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErrX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: 'pull local x'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     fit: 'gaus'
+     logY: true
+  pullXW2:
+     histogramTitle: 'pulls (x)'
+     variable: '(localPosX-rhLocalPosX)/rhLocalErrX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: 'pull local x'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     fit: 'gaus'
+     logY: true
+  pullY:
+     histogramTitle: 'pulls (y)'
+     variable: '(localPosY-rhLocalPosY)/rhLocalErrY'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'pull local y'
+     xNbins: 200
+     xMax: 5
+     xMin: -5
+     logY: true
+#
+#
+#
+  resX:
+     histogramTitle: 'residuals (x)'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  resX1:
+     histogramTitle: 'residuals (x) - cluster size 1'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  resX2:
+     histogramTitle: 'residuals (x) - cluster size 2'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 800
+     xMax: 0.040
+     xMin: -0.040
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  resX3P:
+     histogramTitle: 'residuals (x) - cluster size >2'
+     variable: 'localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize>2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     fit: 'gaus'
+     logY: true
+#
+#
+#
+  stdRes2D:
+     histogramTitle: 'my resolution'
+     variable: 'abs(pathX):localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: 'residual x [cm]'
+     xNbins: 200
+     xMin: -0.1
+     xMax: 0.1
+     yTitle: 'dx [cm]'
+     yNbins: 20
+     yMin: 0.0
+     yMax: 0.1
+#
+#
+#
+  res2DX1:
+     histogramTitle: 'track dx/dz vs. residuals (x) - cluster size 1'
+     variable: 'pathX/pathZ:localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [cm]'
+     xNbins: 300
+     xMax: 0.075
+     xMin: -0.075
+     yNbins: 21
+     yMin: -1.05
+     yMax: 1.05
+     logZ: true
+#
+#
+#
+  res2DX2:
+     histogramTitle: 'track dz/dx vs. residuals (x) - cluster size 2'
+     variable: 'pathX/pathZ:localPosX-rhLocalPosX'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [cm]'
+     xNbins: 800
+     xMax: 0.040
+     xMin: -0.040
+     yNbins: 21
+     yMin: -1.05
+     yMax: 1.05
+     logZ: true
+#
+#
+#
+  res3DXVsDxDzModX:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -500
+     xMax: 500
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 20
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 20
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'dxdz:localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 18
+        yMin: 0
+        yMax: 90
+
+  res3DXVsDxDz:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -200
+     xMax: 200
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'dxdz:localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  res3DXVsDxDzW1:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -200
+     xMax: 200
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'dxdz:localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  res3DXVsDxDzW2:
+     histogramTitle: 'residuals 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -200
+     xMax: 200
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'dxdz:localPosXMod100:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'dxdz:localPosXMod90:10000*(localPosX-rhLocalPosX)'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  pull3DXVsDxDz:
+     histogramTitle: 'pulls 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -10
+     xMax: 10
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'dxdz:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'dxdz:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'dxdz:localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  pull3DXVsDxDzW1:
+     histogramTitle: 'pulls 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==1'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -10
+     xMax: 10
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'dxdz:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'dxdz:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'dxdz:localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+
+  pull3DXVsDxDzW2:
+     histogramTitle: 'pulls 3D (x)'
+     baseCuts: 'tof<12.5&&hasRecHit>0&&clusterSize==2'
+     xTitle: '#Delta x [#mum]'
+     xNbins: 100
+     xMin: -10
+     xMax: 10
+     zTitle: 'local dx/dz'
+     zNbins: 21
+     zMin: -1.05
+     zMax: 1.05
+     mType23:
+        variable: 'dxdz:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType24:
+        variable: 'dxdz:localPosXMod100:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 100 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 100
+     mType25:
+        variable: 'dxdz:localPosXMod90:(localPosX-rhLocalPosX)/rhLocalErrX'
+        yTitle: 'x modulo 90 #mum [#mum]'
+        yNbins: 1
+        yMin: 0
+        yMax: 90
+

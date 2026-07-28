@@ -18,9 +18,9 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic_T33', ''
 # Number of events (-1 = all)
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(-1)
-    #input = cms.untracked.int32(100)
+    #input = cms.untracked.int32(10)
 )
-
+# Dataset: /RelValSingleMuPt10/CMSSW_15_1_0-150X_mcRun4_realistic_v1_STD_RegeneratedGS_Run4D110_noPU-v1/GEN-SIM-RECO
 # Input file
 process.source = cms.Source('PoolSource',
     fileNames = cms.untracked.vstring(
@@ -31,7 +31,7 @@ process.source = cms.Source('PoolSource',
 
 # Output
 process.TFileService = cms.Service('TFileService',
-    fileName = cms.string('file:rechits_tree.root')
+    fileName = cms.string('file:rechits_tree_mu10.root')
 )
 
 process.load('RecoLocalTracker.SiPhase2Clusterizer.phase2TrackerClusterizer_cfi')
@@ -55,7 +55,21 @@ process.analysis = cms.EDAnalyzer('RecHitTreeWA',
     #MakeEtaPlots = cms.bool(False),
     #MinEta = cms.double(0.),
     #MaxEta = cms.double(10.)
-    debugHitMatch = cms.bool(False)
+   debugHitMatch = cms.bool(False),
+    simHitInfo = cms.PSet(
+        simHits = cms.VInputTag(
+            cms.InputTag("g4SimHits", "TrackerHitsPixelBarrelLowTof"),
+            cms.InputTag("g4SimHits", "TrackerHitsPixelEndcapLowTof")
+        )
+    ),
+    recHitInfo = cms.PSet(
+        simHits = cms.VInputTag(
+            cms.InputTag("g4SimHits", "TrackerHitsPixelBarrelLowTof"),
+            #cms.InputTag("g4SimHits", "TrackerHitsPixelBarrelHighTof"),
+            cms.InputTag("g4SimHits", "TrackerHitsPixelEndcapLowTof") #,
+            #cms.InputTag("g4SimHits", "TrackerHitsPixelEndcapHighTof")
+        )
+    )
 )
 
 # Processes to run

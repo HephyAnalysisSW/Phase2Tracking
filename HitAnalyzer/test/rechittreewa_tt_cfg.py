@@ -17,8 +17,8 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic_T33', ''
 
 # Number of events (-1 = all)
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(-1)
-    #input = cms.untracked.int32(100)
+    #input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(3)
 )
 
 # Input file
@@ -56,7 +56,22 @@ process.analysis = cms.EDAnalyzer('RecHitTreeWA',
     #MakeEtaPlots = cms.bool(False),
     #MinEta = cms.double(0.),
     #MaxEta = cms.double(10.)
-    debugHitMatch = cms.bool(False)
+    debugHitMatch = cms.bool(False),
+    simHitInfo = cms.PSet(
+        simHits = cms.VInputTag(
+            cms.InputTag("g4SimHits", "TrackerHitsPixelBarrelLowTof"),
+            cms.InputTag("g4SimHits", "TrackerHitsPixelEndcapLowTof")
+        )
+    ),
+    recHitInfo = cms.PSet(
+        simHits = cms.VInputTag(
+            cms.InputTag("g4SimHits", "TrackerHitsPixelBarrelLowTof"),
+            #cms.InputTag("g4SimHits", "TrackerHitsPixelBarrelHighTof"),
+            cms.InputTag("g4SimHits", "TrackerHitsPixelEndcapLowTof") #,
+            #cms.InputTag("g4SimHits", "TrackerHitsPixelEndcapHighTof")
+        )
+    )
+            
 )
 
 # Processes to run
@@ -65,5 +80,6 @@ process.rechits_step = cms.Path(process.siPhase2RecHits)
 process.analyze_step = cms.Path(process.analysis)
 
 process.schedule = cms.Schedule(process.rechits_step, process.analyze_step)
+
 
 

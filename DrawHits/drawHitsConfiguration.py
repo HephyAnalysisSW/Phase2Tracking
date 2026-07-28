@@ -1,20 +1,30 @@
 #
 # Definitions for histograms from a configuration file
 #
+import yaml
 from fnmatch import fnmatch
 
 class HistogramDefinition:
     ''' A single histogram definition. 
     '''
-    reqGenFields = [ 'canvasName', 'histogramName', 'histogramTitle', 'variable', 'baseCuts' ]
+    # fields that have to be present in the general section
+    reqGenFields = [ 'canvasName' ]
+    # fields that have to be present in a histogram section
     reqHistFields = [ ]
-    requiredFields = reqGenFields + reqHistFields
-    optGenFields =  [ 'effCuts', 'logY' ]
-    optHistFields = [ 'xNbins', 'xMin', 'xMax', 'xTitle', 'yTitle', 'yNbins', 'yMin', 'yMax', \
-                          'zMin', 'zMax', 'display', 'profile' ]
-    optionalFields = optGenFields + optHistFields
-    allFields = requiredFields + optionalFields
-    allHistFields = reqHistFields + optHistFields
+    requiredFields = list(set(reqGenFields + reqHistFields))
+    # optional fields in the general section
+    optGenFields =  [ 'variable', 'baseCuts', 'effCuts', 'logY', 'logZ' ]
+    # optional fields in the histogram section
+    optHistFields = [ 'variable', 'histogramName', 'histogramTitle', 'fit', \
+                          'xNbins', 'xMin', 'xMax', 'xTitle', 'yTitle', 'zTitle', \
+                          'yNbins', 'yMin', 'yMax', \
+                          'zNbins', 'zMin', 'zMax', 'display', 'profile' ]
+    optionalFields = list(set(optGenFields + optHistFields))
+    allFields = list(set(requiredFields + optionalFields))
+    allHistFields = list(set(reqHistFields + optHistFields))
+    # fields that cannot be present for a single module type
+    vetoMtypeFields = [ 'variable', 'baseCuts', 'effCuts', 'profile' ]
+    vetoMtypeFields = [ 'profile' ]
 
     def __init__(self,name,inputDict):
         ''' Define histogram and drawing parameters from dictionary.
@@ -98,6 +108,9 @@ class HistogramDefinition:
         if ( mTName in self.parameters ) and ( name in self.parameters[mTName] ):
           result = self.parameters[mTName][name]
           if result!=None:
+            # check for parameters that can only be general
+            if name in HistogramDefinition.vetoMtypeFields:
+              raise Exception('Parameter '+name+' cannot be present in the section for an individual module type')
             return self.parameters[mTName][name]
         #
         # not found: use general parameter
@@ -106,6 +119,11 @@ class HistogramDefinition:
             return self.parameters[name]
         return None
 
+    def __call__(self,name,mType=None):
+        ''' Make access to parameters easier - use function call
+        '''
+        return self.getParameter(name,mType)
+    
     def vetoMType(self,mType):
         ''' Check for an mType entry with display = False
         '''
@@ -151,29 +169,124 @@ class HistogramDefinitions:
             return self.allDefinitions[name]
         return None
         
-def loadHistogramDefinitions(configName,selectedNames=[],vetoedNames=[]):
-    ''' Load histogram definitions from a configuration file. The configuration file
+class VarMaskCombinations:
+    ''' Combinations of a variable and a mask for use with RDF.Histo*.
+    '''
+    def __init__(self):
+        #
+        # variable+mask name indexed by variable+selection string
+        #
+        self.varMaskDefinitions = { }
+
+    def __call__(self,rdf,varName,selection):
+        ''' Return the name of a variable+mask combination. Define if necessary.
+            Arguments:
+              rdf ........ RDataFrame to be used for definition
+              varName .... name of the variable
+              selection .. selection string to be used as mask
+        '''
+        #
+        # use variable name and normalized selection string (remove spaces)
+        #
+        selNorm = selection.replace(" ","")
+        varMask = "(" + varName + ")["+selNorm+"]"
+        if varMask in self.varMaskDefinitions:
+            # combination exists (assume that it's also defined in the RDataFrame)
+            varMaskName = self.varMaskDefinitions[varMask]
+            assert varMaskName in rdf.GetDefinedColumnNames()
+        else:
+            # create name for combination and define it in the RDataFrame
+            n = len(self.varMaskDefinitions)
+            varMaskName = "varMask{:03d}".format(n)
+            self.varMaskDefinitions[varMask] = varMaskName
+            rdf = rdf.Define(varMaskName,varMask)
+            #print("+++ defined new var + mask combinations:",varMaskName,varMask)
+            #print(rdf.GetDefinedColumnNames())
+            #print("+++")
+        return rdf,varMaskName
+        
+class RDFWrapper:
+    ''' Wrapper of RDataFrame with possibility to define variable+mask combinations
+    '''
+    def __init__(self,rdf):
+        #
+        # variable+mask name indexed by variable+selection string
+        #
+        self.rdf = rdf
+        self.varMaskDefinitions = { }
+
+    def __call__(self):
+        ''' Easy access to RDataFrame
+        '''
+        return self.rdf
+    
+    def defineVarMask(self,varName,selection):
+        ''' Return the name of a variable+mask combination. Define if necessary.
+            Arguments:
+              rdf ........ RDataFrame to be used for definition
+              varName .... name of the variable
+              selection .. selection string to be used as mask
+        '''
+        #
+        # use variable name and normalized selection string (remove spaces)
+        #
+        selNorm = selection.replace(" ","")
+        varMask = "(" + varName + ")["+selNorm+"]"
+        if varMask in self.varMaskDefinitions:
+            # combination exists (assume that it's also defined in the RDataFrame)
+            varMaskName = self.varMaskDefinitions[varMask]
+            assert varMaskName in self.rdf.GetDefinedColumnNames()
+        else:
+            # create name for combination and define it in the RDataFrame
+            n = len(self.varMaskDefinitions)
+            varMaskName = "varMask{:03d}".format(n)
+            self.varMaskDefinitions[varMask] = varMaskName
+            self.rdf = self.rdf.Define(varMaskName,varMask)
+            #print("+++ defined new var + mask combinations:",varMaskName,varMask)
+            #print(rdf.GetDefinedColumnNames())
+            #print("+++")
+        return varMaskName
+        
+        
+def loadConfiguration(configName,selectedNames=[],vetoedNames=[]):
+    ''' Load variable and histogram definitions from a configuration file. The configuration file
+        is expected to contain a "variables" and a "histograms" section. The "histogram" section
         defines dictionaries with the definitions as variable. The name of the variable
         serves as name of the HistogramDefinition.
         Arguments:
            configName ..... name of the module to import from / python file name
            selectedNames .. explicit list of histogram names to be imported (filename wildcard syntax)
            vetoedNames .... explicit list of histogram names to be skipped (filename wildcard syntax)
+        Result:
+           Tuple with dictionary of variable definitions and HistogramDefinitions object
     '''
     # load histogram definitions
     #
-    result = HistogramDefinitions()
+    vDefs = { }
+    hDefs = HistogramDefinitions()
     if configName==None:
-        return result
+        return ( vDefs, hDefs )
 
-    moduleName = configName[:-3] if configName.endswith(".py") else configName
-    module = __import__(moduleName)
-    for n in dir(module):
-        if n.startswith('__'):
-            continue
-        hDict = getattr(module,n)
-        #print(n,type(hDict))
-        #sys.exit()
+    with open(configName,"rt") as yamlFile:
+        allDicts = yaml.load(yamlFile,Loader=yaml.Loader)
+        yamlFile.close()
+    #
+    # store variable definitions as read from configuration
+    #
+    if 'variables' in allDicts:
+        vDefs = allDicts['variables']
+    #
+    # backward compatibility for histograms: treat full input as "histograms" section
+    #   in case neither variables nor histograms sections are defined
+    #
+    if 'histograms' in allDicts:
+        histDicts = allDicts['histograms']
+    else:
+        assert not ( 'variables' in allDicts )
+        histDicts = allDicts
+    #
+    for n,hDict in histDicts.items():
+        #
         assert type(hDict)==dict
         #
         # check if in list of histograms to be displayed
@@ -199,8 +312,8 @@ def loadHistogramDefinitions(configName,selectedNames=[],vetoedNames=[]):
         # add histogram
         #
         hDef = HistogramDefinition(n,hDict)
-        result.add(hDef)
+        hDefs.add(hDef)
         print("Added",hDef.getParameter('canvasName'))
-
-    return result
+        
+    return ( vDefs, hDefs )
 

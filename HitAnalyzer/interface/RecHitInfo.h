@@ -1,6 +1,7 @@
 #ifndef HITANALYZER_RECHITINFO_H
 #define HITANALYZER_RECHITINFO_H
 
+#include "Phase2Tracking/HitAnalyzer/interface/CommonHitInfo.h"
 
 #include "DataFormats/Common/interface/DetSetVector.h"
 #include "DataFormats/TrackerRecHit2D/interface/Phase2TrackerRecHit1D.h"
@@ -18,7 +19,7 @@
 
 #include "TTree.h"
 
-class RecHitInfo {
+class RecHitInfo : public CommonHitInfo {
 
 public:
   struct RecHitData
@@ -59,44 +60,46 @@ public:
     std::vector<unsigned short> moduleType;
     std::vector<ROOT::Math::XYZVectorF> detNormal;
     std::vector<unsigned int> trackId;
+    std::vector<unsigned int> nSimTracks;
   };
 
   RecHitData recHitData;
 
   RecHitInfo() {
-    tTopo = 0;
-    tkGeom = 0;
+    /* tTopo = 0; */
+    /* tkGeom = 0; */
   };
 
   ~RecHitInfo() {}
 
   void setBranches(TTree& tree);
   
-  std::vector<unsigned int> getSimTrackId(
-    edm::Handle<edm::DetSetVector<PixelDigiSimLink> >& pixelSimLinks,
-    const DetId& detId, unsigned int channel);
+  /* std::vector<unsigned int> getSimTrackId( */
+  /*   edm::Handle<edm::DetSetVector<PixelDigiSimLink> >& pixelSimLinks, */
+  /*   const DetId& detId, unsigned int channel); */
   
   void fillSimHitInfo(const PSimHit& simHit);
 
   void fillRecHitInfo(const Phase2TrackerRecHit1D& recHit, unsigned int rawid, const GeomDetUnit* geomDetUnit,
-		      edm::Handle<edm::DetSetVector<PixelDigiSimLink> >* pixelSimLinks,
-		      std::map<unsigned int, SimTrack>& simTracks, edm::Handle<edm::PSimHitContainer>* simHitsRaw,
+		      // edm::Handle<edm::DetSetVector<PixelDigiSimLink> >* pixelSimLinks,
+		      // std::map<unsigned int, SimTrack>& simTracks,
+		      const std::vector<const edm::PSimHitContainer*>& simHitsRaw,
 		      bool debugHitMatch);
   
   void clear();
   
-  void setTopology(const TrackerTopology* topo) {
-    tTopo = topo;
-  }
+  /* void setTopology(const TrackerTopology* topo) { */
+  /*   tTopo = topo; */
+  /* } */
 
-  void setGeometry(const TrackerGeometry* geom) {
-    tkGeom = geom;
-  }  
+  /* void setGeometry(const TrackerGeometry* geom) { */
+  /*   tkGeom = geom; */
+  /* }   */
   
 
  private:
-  const TrackerTopology* tTopo;
-  const TrackerGeometry* tkGeom;
+  /* const TrackerTopology* tTopo; */
+  /* const TrackerGeometry* tkGeom; */
 };
 
 #endif
